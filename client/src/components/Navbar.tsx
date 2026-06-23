@@ -7,6 +7,8 @@ const navLinks = [
   { to: '/life-packs', label: 'Celenirises' },
   { to: '/projects', label: 'Projects' },
   { to: '/updates', label: 'Updates' },
+  { to: '/financial-reports', label: 'Reports' },
+  { to: '/research', label: 'Research' },
   { to: '/transparency', label: 'Transparency' },
   { to: '/donate', label: 'Support' },
   { to: '/contact', label: 'Contact' },

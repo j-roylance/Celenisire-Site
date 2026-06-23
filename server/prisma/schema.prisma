@@ -61,6 +61,11 @@ enum InterestArea {
   media
 }
 
+enum DocumentSourceType {
+  upload
+  external
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -74,6 +79,8 @@ model User {
   updatePosts             UpdatePost[]
   accountingTransactions  AccountingTransaction[]
   activityLogs            ActivityLog[]
+  financialReports        FinancialReport[]
+  researchPublications    ResearchPublication[]
 }
 
 model DonationPledge {
@@ -158,4 +165,42 @@ model ActivityLog {
   userId     String?
   user       User?    @relation(fields: [userId], references: [id])
   createdAt  DateTime @default(now())
+}
+
+model FinancialReport {
+  id          String             @id @default(cuid())
+  title       String
+  slug        String             @unique
+  periodLabel String
+  summary     String?
+  fileUrl     String?
+  fileName    String?
+  fileSize    Int?
+  storagePath String?
+  sourceType  DocumentSourceType?
+  published   Boolean            @default(false)
+  authorId    String
+  author      User               @relation(fields: [authorId], references: [id])
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  publishedAt DateTime?
+}
+
+model ResearchPublication {
+  id          String             @id @default(cuid())
+  title       String
+  slug        String             @unique
+  abstract    String
+  authors     String?
+  fileUrl     String?
+  fileName    String?
+  fileSize    Int?
+  storagePath String?
+  sourceType  DocumentSourceType?
+  published   Boolean            @default(false)
+  authorId    String
+  author      User               @relation(fields: [authorId], references: [id])
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  publishedAt DateTime?
 }

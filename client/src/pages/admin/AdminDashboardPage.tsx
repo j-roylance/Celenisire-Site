@@ -33,6 +33,8 @@ export function AdminDashboardPage() {
             <DashboardCard label="New Messages" value={stats?.newMessageCount ?? 0} />
             <DashboardCard label="Active Projects" value={stats?.activeProjectCount ?? 0} />
             <DashboardCard label="Published Updates" value={stats?.publishedUpdateCount ?? 0} />
+            <DashboardCard label="Published Reports" value={stats?.publishedReportCount ?? 0} />
+            <DashboardCard label="Published Research" value={stats?.publishedPublicationCount ?? 0} />
           </div>
 
           <h2 style={{ marginBottom: '1rem' }}>Recent Activity</h2>

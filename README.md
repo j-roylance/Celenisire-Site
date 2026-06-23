@@ -85,6 +85,18 @@ The Vite dev server proxies `/api/*` to the Express server.
 | `CLIENT_URL` | Frontend URL (`http://localhost:5173` for dev) |
 | `PORT` | Express server port (default: `3001`) |
 | `NODE_ENV` | `development` or `production` |
+| `SUPABASE_URL` | Supabase project URL (required for PDF uploads) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only, for Storage uploads) |
+
+### Supabase Storage (PDF uploads)
+
+For admin PDF uploads, create two public buckets in the Supabase dashboard:
+
+1. **`financial-reports`** — public read access for published report PDFs
+2. **`research-publications`** — public read access for published research PDFs
+
+Set both buckets to allow public read. The server uses the service role key to upload and delete files. If Supabase Storage is not configured, admins can still attach documents via external URL.
+
 
 ## Prisma Commands
 
@@ -119,14 +131,28 @@ Vercel configuration:
 
 Set `CLIENT_URL` to your production domain (e.g. `https://celenisire.org`).
 
+## Public Routes
+
+| Route | Description |
+|---|---|
+| `/financial-reports` | Published financial transparency reports |
+| `/financial-reports/:slug` | Individual report detail + PDF link |
+| `/research` | Published research publications |
+| `/research/:slug` | Individual publication detail + PDF link |
+
+## Admin Routes
+
+| Route | Roles (write) |
+|---|---|
+| `/admin/financial-reports` | ADMIN, ACCOUNTANT |
+| `/admin/research-publications` | ADMIN, EDITOR |
+
 ## Future TODOs
 
 - [ ] Complete legal nonprofit formation
 - [ ] Add payment processor (Stripe)
 - [ ] Restrict admin registration before production
 - [ ] Add email provider (transactional + campaigns)
-- [ ] Add public financial reports
-- [ ] Add research publication system
 
 ## License
 

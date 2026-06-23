@@ -30,6 +30,19 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
+async function multipartRequest<T>(path: string, formData: FormData, method = 'POST'): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method,
+    credentials: 'include',
+    body: formData,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new ApiError(data.error || 'Request failed', res.status, data.details);
+  }
+  return data as T;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -57,6 +70,40 @@ export interface UpdatePost {
   slug: string;
   excerpt: string;
   body?: string;
+  published?: boolean;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt?: string;
+  author?: { name: string };
+}
+
+export interface FinancialReport {
+  id: string;
+  title: string;
+  slug: string;
+  periodLabel: string;
+  summary?: string | null;
+  fileUrl?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
+  sourceType?: string | null;
+  published?: boolean;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt?: string;
+  author?: { name: string };
+}
+
+export interface ResearchPublication {
+  id: string;
+  title: string;
+  slug: string;
+  abstract: string;
+  authors?: string | null;
+  fileUrl?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
+  sourceType?: string | null;
   published?: boolean;
   publishedAt?: string | null;
   createdAt: string;
@@ -144,4 +191,33 @@ export const api = {
   updateUpdate: (id: string, data: unknown) =>
     request(`/admin/updates/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteUpdate: (id: string) => request(`/admin/updates/${id}`, { method: 'DELETE' }),
+
+  getPublicFinancialReports: () => request<{ reports: FinancialReport[] }>('/financial-reports/public'),
+  getPublicFinancialReport: (slug: string) =>
+    request<{ report: FinancialReport }>(`/financial-reports/public/${slug}`),
+
+  getPublicResearchPublications: () =>
+    request<{ publications: ResearchPublication[] }>('/research-publications/public'),
+  getPublicResearchPublication: (slug: string) =>
+    request<{ publication: ResearchPublication }>(`/research-publications/public/${slug}`),
+
+  getFinancialReports: () => request<{ reports: FinancialReport[] }>('/admin/financial-reports'),
+  createFinancialReport: (formData: FormData) =>
+    multipartRequest<{ report: FinancialReport }>('/admin/financial-reports', formData),
+  updateFinancialReport: (id: string, formData: FormData) =>
+    multipartRequest<{ report: FinancialReport }>(`/admin/financial-reports/${id}`, formData, 'PATCH'),
+  deleteFinancialReport: (id: string) => request(`/admin/financial-reports/${id}`, { method: 'DELETE' }),
+
+  getResearchPublications: () =>
+    request<{ publications: ResearchPublication[] }>('/admin/research-publications'),
+  createResearchPublication: (formData: FormData) =>
+    multipartRequest<{ publication: ResearchPublication }>('/admin/research-publications', formData),
+  updateResearchPublication: (id: string, formData: FormData) =>
+    multipartRequest<{ publication: ResearchPublication }>(
+      `/admin/research-publications/${id}`,
+      formData,
+      'PATCH',
+    ),
+  deleteResearchPublication: (id: string) =>
+    request(`/admin/research-publications/${id}`, { method: 'DELETE' }),
 };

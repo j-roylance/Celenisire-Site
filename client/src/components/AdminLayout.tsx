@@ -11,6 +11,8 @@ const adminLinks = [
   { to: '/admin/subscribers', label: 'Subscribers' },
   { to: '/admin/projects', label: 'Projects' },
   { to: '/admin/updates', label: 'Updates' },
+  { to: '/admin/financial-reports', label: 'Financial Reports' },
+  { to: '/admin/research-publications', label: 'Research' },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {

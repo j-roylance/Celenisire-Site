@@ -79,6 +79,8 @@ export function Footer() {
               <li><Link to="/life-packs">Celenirises</Link></li>
               <li><Link to="/projects">Projects</Link></li>
               <li><Link to="/updates">Updates</Link></li>
+              <li><Link to="/financial-reports">Financial Reports</Link></li>
+              <li><Link to="/research">Research</Link></li>
             </ul>
           </div>
           <div>

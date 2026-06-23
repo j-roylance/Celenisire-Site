@@ -10,6 +10,7 @@ export interface AuthRequest extends Request {
     role: UserRole;
     name: string;
   };
+  file?: Express.Multer.File;
 }
 
 export async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {

@@ -9,21 +9,21 @@ import {
   UserRole,
 } from '@prisma/client';
 import { requireAuth, requireRole, type AuthRequest } from '../middleware/auth.js';
+import { pdfUpload } from '../middleware/upload.js';
 import { prisma } from '../lib/prisma.js';
 import { logActivity } from '../services/activityLog.js';
+import {
+  getFinancialBucket,
+  getResearchBucket,
+  parseBooleanField,
+  resolveFileSource,
+  slugify,
+} from '../lib/documentUpload.js';
+import { deleteStorageFile } from '../lib/supabaseStorage.js';
 
 const router = Router();
 
 router.use(requireAuth);
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-}
-
-// Dashboard
 router.get('/dashboard', requireRole(UserRole.ADMIN, UserRole.EDITOR, UserRole.ACCOUNTANT, UserRole.VIEWER), async (_req, res) => {
   const [
     pledgeCount,
@@ -32,6 +32,8 @@ router.get('/dashboard', requireRole(UserRole.ADMIN, UserRole.EDITOR, UserRole.A
     messageCount,
     projectCount,
     updateCount,
+    reportCount,
+    publicationCount,
     recentActivity,
   ] = await Promise.all([
     prisma.donationPledge.count(),
@@ -40,6 +42,8 @@ router.get('/dashboard', requireRole(UserRole.ADMIN, UserRole.EDITOR, UserRole.A
     prisma.contactMessage.count({ where: { status: MessageStatus.new } }),
     prisma.project.count({ where: { status: { in: [ProjectStatus.active, ProjectStatus.researching, ProjectStatus.prototyping] } } }),
     prisma.updatePost.count({ where: { published: true } }),
+    prisma.financialReport.count({ where: { published: true } }),
+    prisma.researchPublication.count({ where: { published: true } }),
     prisma.activityLog.findMany({
       take: 10,
       orderBy: { createdAt: 'desc' },
@@ -55,6 +59,8 @@ router.get('/dashboard', requireRole(UserRole.ADMIN, UserRole.EDITOR, UserRole.A
       newMessageCount: messageCount,
       activeProjectCount: projectCount,
       publishedUpdateCount: updateCount,
+      publishedReportCount: reportCount,
+      publishedPublicationCount: publicationCount,
     },
     recentActivity,
   });
@@ -350,6 +356,250 @@ router.patch('/updates/:id', requireRole(UserRole.ADMIN, UserRole.EDITOR), async
 router.delete('/updates/:id', requireRole(UserRole.ADMIN, UserRole.EDITOR), async (req: AuthRequest, res) => {
   await prisma.updatePost.delete({ where: { id: req.params.id } });
   await logActivity('delete_update', 'UpdatePost', req.params.id, req.user!.id);
+  res.json({ ok: true });
+});
+
+// Financial Reports
+router.get('/financial-reports', requireRole(UserRole.ADMIN, UserRole.ACCOUNTANT, UserRole.VIEWER), async (_req, res) => {
+  const reports = await prisma.financialReport.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { author: { select: { name: true } } },
+  });
+  res.json({ reports });
+});
+
+router.post(
+  '/financial-reports',
+  requireRole(UserRole.ADMIN, UserRole.ACCOUNTANT),
+  pdfUpload.single('file'),
+  async (req: AuthRequest, res) => {
+    try {
+      const title = z.string().min(1).max(200).parse(req.body.title);
+      const periodLabel = z.string().min(1).max(100).parse(req.body.periodLabel);
+      const summary = req.body.summary ? z.string().max(5000).parse(req.body.summary) : undefined;
+      const slug = req.body.slug ? z.string().min(1).max(200).parse(req.body.slug) : slugify(title);
+      const published = parseBooleanField(req.body.published);
+
+      const fileSource = await resolveFileSource(
+        req.file,
+        req.body.externalUrl,
+        getFinancialBucket(),
+        'reports',
+      );
+      if (!fileSource) {
+        return res.status(400).json({ error: 'A PDF file or external URL is required' });
+      }
+
+      const report = await prisma.financialReport.create({
+        data: {
+          title,
+          slug,
+          periodLabel,
+          summary,
+          published,
+          publishedAt: published ? new Date() : null,
+          authorId: req.user!.id,
+          ...fileSource,
+        },
+        include: { author: { select: { name: true } } },
+      });
+      await logActivity('create_financial_report', 'FinancialReport', report.id, req.user!.id);
+      res.status(201).json({ report });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Validation failed', details: err.errors });
+      }
+      if (err instanceof Error) {
+        return res.status(400).json({ error: err.message });
+      }
+      res.status(500).json({ error: 'Failed to create financial report' });
+    }
+  },
+);
+
+router.patch(
+  '/financial-reports/:id',
+  requireRole(UserRole.ADMIN, UserRole.ACCOUNTANT),
+  pdfUpload.single('file'),
+  async (req: AuthRequest, res) => {
+    try {
+      const existing = await prisma.financialReport.findUnique({ where: { id: req.params.id } });
+      if (!existing) return res.status(404).json({ error: 'Report not found' });
+
+      const data: Record<string, unknown> = {};
+      if (req.body.title) data.title = z.string().min(1).max(200).parse(req.body.title);
+      if (req.body.periodLabel) data.periodLabel = z.string().min(1).max(100).parse(req.body.periodLabel);
+      if (req.body.summary !== undefined) data.summary = req.body.summary || null;
+      if (req.body.slug) data.slug = z.string().min(1).max(200).parse(req.body.slug);
+      if (req.body.published !== undefined) {
+        const published = parseBooleanField(req.body.published);
+        data.published = published;
+        if (published && !existing.publishedAt) data.publishedAt = new Date();
+        if (!published) data.publishedAt = null;
+      }
+
+      const fileSource = await resolveFileSource(
+        req.file,
+        req.body.externalUrl,
+        getFinancialBucket(),
+        'reports',
+      );
+      if (fileSource) {
+        if (existing.storagePath) {
+          await deleteStorageFile(getFinancialBucket(), existing.storagePath);
+        }
+        Object.assign(data, fileSource);
+      }
+
+      const report = await prisma.financialReport.update({
+        where: { id: req.params.id },
+        data,
+        include: { author: { select: { name: true } } },
+      });
+      await logActivity('update_financial_report', 'FinancialReport', report.id, req.user!.id);
+      res.json({ report });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Validation failed', details: err.errors });
+      }
+      if (err instanceof Error) {
+        return res.status(400).json({ error: err.message });
+      }
+      res.status(500).json({ error: 'Failed to update financial report' });
+    }
+  },
+);
+
+router.delete('/financial-reports/:id', requireRole(UserRole.ADMIN, UserRole.ACCOUNTANT), async (req: AuthRequest, res) => {
+  const existing = await prisma.financialReport.findUnique({ where: { id: req.params.id } });
+  if (!existing) return res.status(404).json({ error: 'Report not found' });
+  if (existing.storagePath) {
+    await deleteStorageFile(getFinancialBucket(), existing.storagePath);
+  }
+  await prisma.financialReport.delete({ where: { id: req.params.id } });
+  await logActivity('delete_financial_report', 'FinancialReport', req.params.id, req.user!.id);
+  res.json({ ok: true });
+});
+
+// Research Publications
+router.get('/research-publications', requireRole(UserRole.ADMIN, UserRole.EDITOR, UserRole.VIEWER), async (_req, res) => {
+  const publications = await prisma.researchPublication.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { author: { select: { name: true } } },
+  });
+  res.json({ publications });
+});
+
+router.post(
+  '/research-publications',
+  requireRole(UserRole.ADMIN, UserRole.EDITOR),
+  pdfUpload.single('file'),
+  async (req: AuthRequest, res) => {
+    try {
+      const title = z.string().min(1).max(200).parse(req.body.title);
+      const abstract = z.string().min(1).max(10000).parse(req.body.abstract);
+      const authors = req.body.authors ? z.string().max(500).parse(req.body.authors) : undefined;
+      const slug = req.body.slug ? z.string().min(1).max(200).parse(req.body.slug) : slugify(title);
+      const published = parseBooleanField(req.body.published);
+
+      const fileSource = await resolveFileSource(
+        req.file,
+        req.body.externalUrl,
+        getResearchBucket(),
+        'publications',
+      );
+      if (!fileSource) {
+        return res.status(400).json({ error: 'A PDF file or external URL is required' });
+      }
+
+      const publication = await prisma.researchPublication.create({
+        data: {
+          title,
+          slug,
+          abstract,
+          authors,
+          published,
+          publishedAt: published ? new Date() : null,
+          authorId: req.user!.id,
+          ...fileSource,
+        },
+        include: { author: { select: { name: true } } },
+      });
+      await logActivity('create_research_publication', 'ResearchPublication', publication.id, req.user!.id);
+      res.status(201).json({ publication });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Validation failed', details: err.errors });
+      }
+      if (err instanceof Error) {
+        return res.status(400).json({ error: err.message });
+      }
+      res.status(500).json({ error: 'Failed to create research publication' });
+    }
+  },
+);
+
+router.patch(
+  '/research-publications/:id',
+  requireRole(UserRole.ADMIN, UserRole.EDITOR),
+  pdfUpload.single('file'),
+  async (req: AuthRequest, res) => {
+    try {
+      const existing = await prisma.researchPublication.findUnique({ where: { id: req.params.id } });
+      if (!existing) return res.status(404).json({ error: 'Publication not found' });
+
+      const data: Record<string, unknown> = {};
+      if (req.body.title) data.title = z.string().min(1).max(200).parse(req.body.title);
+      if (req.body.abstract) data.abstract = z.string().min(1).max(10000).parse(req.body.abstract);
+      if (req.body.authors !== undefined) data.authors = req.body.authors || null;
+      if (req.body.slug) data.slug = z.string().min(1).max(200).parse(req.body.slug);
+      if (req.body.published !== undefined) {
+        const published = parseBooleanField(req.body.published);
+        data.published = published;
+        if (published && !existing.publishedAt) data.publishedAt = new Date();
+        if (!published) data.publishedAt = null;
+      }
+
+      const fileSource = await resolveFileSource(
+        req.file,
+        req.body.externalUrl,
+        getResearchBucket(),
+        'publications',
+      );
+      if (fileSource) {
+        if (existing.storagePath) {
+          await deleteStorageFile(getResearchBucket(), existing.storagePath);
+        }
+        Object.assign(data, fileSource);
+      }
+
+      const publication = await prisma.researchPublication.update({
+        where: { id: req.params.id },
+        data,
+        include: { author: { select: { name: true } } },
+      });
+      await logActivity('update_research_publication', 'ResearchPublication', publication.id, req.user!.id);
+      res.json({ publication });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Validation failed', details: err.errors });
+      }
+      if (err instanceof Error) {
+        return res.status(400).json({ error: err.message });
+      }
+      res.status(500).json({ error: 'Failed to update research publication' });
+    }
+  },
+);
+
+router.delete('/research-publications/:id', requireRole(UserRole.ADMIN, UserRole.EDITOR), async (req: AuthRequest, res) => {
+  const existing = await prisma.researchPublication.findUnique({ where: { id: req.params.id } });
+  if (!existing) return res.status(404).json({ error: 'Publication not found' });
+  if (existing.storagePath) {
+    await deleteStorageFile(getResearchBucket(), existing.storagePath);
+  }
+  await prisma.researchPublication.delete({ where: { id: req.params.id } });
+  await logActivity('delete_research_publication', 'ResearchPublication', req.params.id, req.user!.id);
   res.json({ ok: true });
 });
 

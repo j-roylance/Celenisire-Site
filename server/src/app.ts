@@ -8,6 +8,8 @@ import subscriberRoutes from './routes/subscribers.js';
 import contactMessageRoutes from './routes/contactMessages.js';
 import projectRoutes from './routes/projects.js';
 import updateRoutes from './routes/updates.js';
+import financialReportRoutes from './routes/financialReports.js';
+import researchPublicationRoutes from './routes/researchPublications.js';
 import adminRoutes from './routes/admin.js';
 
 export function createApp() {
@@ -32,6 +34,8 @@ export function createApp() {
   app.use('/api/contact-messages', contactMessageRoutes);
   app.use('/api/projects', projectRoutes);
   app.use('/api/updates', updateRoutes);
+  app.use('/api/financial-reports', financialReportRoutes);
+  app.use('/api/research-publications', researchPublicationRoutes);
   app.use('/api/admin', adminRoutes);
 
   app.use((_req, res) => {

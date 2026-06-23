@@ -7,6 +7,8 @@ const envSchema = z.object({
   CLIENT_URL: z.string().url(),
   PORT: z.coerce.number().default(3001),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -21,3 +23,7 @@ function loadEnv(): Env {
 }
 
 export const env = loadEnv();
+
+export function isSupabaseStorageConfigured(): boolean {
+  return Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY);
+}

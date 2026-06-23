@@ -14,6 +14,10 @@ import { ContactPage } from './pages/ContactPage';
 import { TransparencyPage } from './pages/TransparencyPage';
 import { UpdatesPage } from './pages/UpdatesPage';
 import { UpdateDetailPage } from './pages/UpdateDetailPage';
+import { FinancialReportsPage } from './pages/FinancialReportsPage';
+import { FinancialReportDetailPage } from './pages/FinancialReportDetailPage';
+import { ResearchPublicationsPage } from './pages/ResearchPublicationsPage';
+import { ResearchPublicationDetailPage } from './pages/ResearchPublicationDetailPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
@@ -24,6 +28,8 @@ import { AdminDonationsPage } from './pages/admin/AdminDonationsPage';
 import { AdminSubscribersPage } from './pages/admin/AdminSubscribersPage';
 import { AdminProjectsPage } from './pages/admin/AdminProjectsPage';
 import { AdminUpdatesPage } from './pages/admin/AdminUpdatesPage';
+import { AdminFinancialReportsPage } from './pages/admin/AdminFinancialReportsPage';
+import { AdminResearchPublicationsPage } from './pages/admin/AdminResearchPublicationsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +54,10 @@ export default function App() {
               <Route path="transparency" element={<TransparencyPage />} />
               <Route path="updates" element={<UpdatesPage />} />
               <Route path="updates/:slug" element={<UpdateDetailPage />} />
+              <Route path="financial-reports" element={<FinancialReportsPage />} />
+              <Route path="financial-reports/:slug" element={<FinancialReportDetailPage />} />
+              <Route path="research" element={<ResearchPublicationsPage />} />
+              <Route path="research/:slug" element={<ResearchPublicationDetailPage />} />
             </Route>
 
             <Route path="login" element={<GuestRoute><LoginPage /></GuestRoute>} />
@@ -61,6 +71,8 @@ export default function App() {
             <Route path="admin/subscribers" element={<ProtectedRoute><AdminSubscribersPage /></ProtectedRoute>} />
             <Route path="admin/projects" element={<ProtectedRoute><AdminProjectsPage /></ProtectedRoute>} />
             <Route path="admin/updates" element={<ProtectedRoute><AdminUpdatesPage /></ProtectedRoute>} />
+            <Route path="admin/financial-reports" element={<ProtectedRoute><AdminFinancialReportsPage /></ProtectedRoute>} />
+            <Route path="admin/research-publications" element={<ProtectedRoute><AdminResearchPublicationsPage /></ProtectedRoute>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
