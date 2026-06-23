@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Participants Maintenance - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        .section {
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        /* Enhanced search and action bar */
+        .search-action-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-action-bar:hover {
+            box-shadow: 0 12px 40px rgba(58, 63, 59, 0.12);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 1.5px solid rgba(255, 182, 193, 0.3);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--pastel-pink-dark);
+            box-shadow: 0 0 0 3px rgba(216, 112, 147, 0.15);
+            background: var(--white);
+        }
+
+        .search-box input:hover {
+            border-color: var(--pastel-pink-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            border-radius: 50px;
+            padding: 0.875rem 2rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--pastel-pink-primary);
+            color: var(--pastel-pink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--pastel-pink-lighter);
+            border-color: var(--pastel-pink-dark);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--dark-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .search-action-bar {
+                padding: 1rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('../partials/navbar')%>
+
+    <!-- Main Content Section -->
+    <section class="section" style="background-color: var(--white) !important; background-image: none !important; padding: 4rem 2rem; min-height: auto; overflow-y: visible;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0;">
+            <!-- Page Header -->
+            <div class="page-header" style="text-align: center; margin-bottom: 3rem; background-color: transparent; padding: 0;">
+                <h1>Participants Maintenance</h1>
+                <p>View participant records and participant information.</p>
+            </div>
+            
+            <!-- Search and Action Bar -->
+            <div class="search-action-bar">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" name="search" placeholder="Search participants..." autocomplete="off">
+                    </div>
+                </div>
+            </div>
+         
+            <!-- Content Area -->
+            <div style="margin-top: 2.5rem;">
+                <h2 class="mb-4" style="font-family: 'DM Serif Display', serif; color: var(--dark-charcoal); font-size: 2rem; margin-bottom: 1.5rem;">Participant List</h2>
+            
+            <!-- Display error message if available -->
+            <% if (typeof error_message !== 'undefined' && error_message) { %>
+                <div class="alert alert-error" role="alert">
+                    <%= error_message %>
+                </div>
+            <% } %>
+            
+            <!-- Display participants list -->
+            <div id="participantCardsContainer" class="participant-cards-grid">
+                <!-- Cards will be dynamically rendered here -->
+            </div>
+            <div id="noParticipantsMessage" class="alert alert-error" role="alert" style="display: none;">
+                No Participants found.
+            </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include the add/edit modal -->
+    <%- include('../partials/addEditModal', {
+        modalId: 'participantModal',
+        modalTitle: 'Add Participant',
+        formId: 'participantModal-form',
+        formAction: '/mParticipant/save',
+        fields: [
+            { name: 'participantid', label: 'Participant ID', type: 'number', required: true },
+            { name: 'participantemail', label: 'Participant Email', type: 'email', required: true },
+            { name: 'participantdob', label: 'Participant DOB', type: 'date', required: true },
+            { name: 'participantrole', label: 'Participant Role', type: 'text', required: true },
+            { name: 'participantphone', label: 'Participant Phone', type: 'text', required: true },
+            { name: 'participantcity', label: 'Participant City', type: 'text', required: true },
+            { name: 'participantstate', label: 'Participant State', type: 'text', required: true },
+            { name: 'participantzip', label: 'Participant Zip', type: 'text', required: true },
+            { name: 'participantschooloremployer', label: 'Participant School Or Employer', type: 'text', required: true },
+            { name: 'participantfieldofinterest', label: 'Participant Field Of Interest', type: 'text', required: true }
+        ]
+    }) %>
+
+    <!-- Include the delete confirmation modal -->
+    <%- include('../partials/deleteConfirmModal') %>
+
+    <!-- Participant Detail Modal -->
+    <div id="participantDetailModal" class="participant-modal">
+        <div class="participant-modal-content">
+            <div class="participant-modal-header">
+                <h2 id="participantModalName">Participant Details</h2>
+                <span class="participant-modal-close" onclick="closeParticipantModal()">&times;</span>
+            </div>
+            <div class="participant-modal-body" id="participantModalBody">
+                <div style="text-align: center; padding: 2rem;">
+                    <p>Loading participant details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script src="/modalHelper.js"></script>
+    <script>
+        let allParticipants = <%- JSON.stringify(allParticipants || []) %>;
+        let displayedParticipants = [];
+
+        // Initialize page - show 20 random participants
+        document.addEventListener('DOMContentLoaded', function() {
+            // Shuffle and get 20 random participants
+            const shuffled = [...allParticipants].sort(() => 0.5 - Math.random());
+            displayedParticipants = shuffled.slice(0, 20);
+            renderParticipantCards(displayedParticipants);
+
+            // Set up real-time search
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filterParticipants(this.value.trim());
+                });
+            }
+        });
+
+        // Filter participants based on search term
+        function filterParticipants(searchTerm) {
+            if (!searchTerm) {
+                // If search is empty, show 20 random participants
+                const shuffled = [...allParticipants].sort(() => 0.5 - Math.random());
+                displayedParticipants = shuffled.slice(0, 20);
+            } else {
+                // Filter participants that match search term
+                const searchLower = searchTerm.toLowerCase();
+                displayedParticipants = allParticipants.filter(participant => {
+                    const firstName = (participant.participantfirstname || '').toLowerCase();
+                    const lastName = (participant.participantlastname || '').toLowerCase();
+                    const fullName = `${firstName} ${lastName}`;
+                    const reverseFullName = `${lastName} ${firstName}`;
+                    
+                    return firstName.startsWith(searchLower) || 
+                           lastName.startsWith(searchLower) ||
+                           fullName.startsWith(searchLower) ||
+                           reverseFullName.startsWith(searchLower) ||
+                           firstName.includes(searchLower) ||
+                           lastName.includes(searchLower);
+                });
+            }
+            renderParticipantCards(displayedParticipants);
+        }
+
+        // Render participant cards
+        function renderParticipantCards(participants) {
+            const container = document.getElementById('participantCardsContainer');
+            const noResultsMessage = document.getElementById('noParticipantsMessage');
+            
+            if (!container) return;
+
+            if (participants.length === 0) {
+                container.innerHTML = '';
+                if (noResultsMessage) {
+                    noResultsMessage.style.display = 'block';
+                }
+                return;
+            }
+
+            if (noResultsMessage) {
+                noResultsMessage.style.display = 'none';
+            }
+
+            container.innerHTML = participants.map(participant => {
+                const fullName = `${participant.participantfirstname || ''} ${participant.participantlastname || ''}`.trim();
+                return `
+                    <div class="participant-card" data-participant-id="${participant.participantid}">
+                        <p class="participant-card-name">${fullName}</p>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers to all cards
+            container.querySelectorAll('.participant-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const participantId = this.getAttribute('data-participant-id');
+                    if (participantId) {
+                        loadParticipantDetails(participantId);
+                    }
+                });
+            });
+        }
+
+
+        // Load participant details via AJAX
+        function loadParticipantDetails(participantId) {
+            const modal = document.getElementById('participantDetailModal');
+            const modalBody = document.getElementById('participantModalBody');
+            const modalName = document.getElementById('participantModalName');
+            
+            // Clear previous data immediately
+            modalName.textContent = 'Loading...';
+            
+            // Show modal with loading state
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Loading participant details...</p></div>';
+
+            // Fetch participant details with cache control
+            fetch(`/api/participant/${participantId}`, {
+                method: 'GET',
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch participant details');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    populateParticipantModal(data);
+                })
+                .catch(error => {
+                    console.error('Error loading participant details:', error);
+                    modalBody.innerHTML = '<div class="participant-empty-state"><p>Error loading participant details. Please try again.</p></div>';
+                    modalName.textContent = 'Error';
+                });
+        }
+
+        // Populate modal with participant data
+        function populateParticipantModal(data) {
+            const modalName = document.getElementById('participantModalName');
+            const modalBody = document.getElementById('participantModalBody');
+            const participant = data.participant;
+
+            // Set modal header name
+            modalName.textContent = `${participant.participantfirstname} ${participant.participantlastname}`;
+
+            // Build modal content
+            let html = '';
+
+            // Participant Info Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Participant Information</h3>';
+            html += '<div class="participant-info-grid">';
+            html += `<div class="participant-info-item"><span class="participant-info-label">Email</span><span class="participant-info-value">${participant.participantemail || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Date of Birth</span><span class="participant-info-value">${participant.participantdob ? new Date(participant.participantdob).toLocaleDateString() : 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Role</span><span class="participant-info-value">${participant.participantrole || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Phone</span><span class="participant-info-value">${participant.participantphone || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">City</span><span class="participant-info-value">${participant.participantcity || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">State</span><span class="participant-info-value">${participant.participantstate || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">ZIP Code</span><span class="participant-info-value">${participant.participantzip || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">School/Employer</span><span class="participant-info-value">${participant.participantschooloremployer || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Field of Interest</span><span class="participant-info-value">${participant.participantfieldofinterest || 'N/A'}</span></div>`;
+            html += '</div>';
+            html += '</div>';
+
+            // Donations Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Donations</h3>';
+            if (data.donations && data.donations.length > 0) {
+                html += '<table class="participant-donations-table">';
+                html += '<thead><tr><th>Date</th><th>Amount</th></tr></thead>';
+                html += '<tbody>';
+                data.donations.forEach(donation => {
+                    const amount = parseFloat(donation.donationamount) || 0;
+                    const date = donation.donationtime ? new Date(donation.donationtime).toLocaleDateString() : 'N/A';
+                    html += `<tr><td>${date}</td><td>$${amount.toFixed(2)}</td></tr>`;
+                });
+                html += '</tbody>';
+                html += '</table>';
+            } else {
+                html += '<div class="participant-empty-state">No donations found.</div>';
+            }
+            html += '</div>';
+
+            // Events Attended Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Events Attended</h3>';
+            if (data.events && data.events.length > 0) {
+                html += '<ul class="participant-events-list">';
+                data.events.forEach(event => {
+                    html += `<li><span>${event.eventType || 'Unknown'}</span><span>${event.count}</span></li>`;
+                });
+                html += '</ul>';
+            } else {
+                html += '<div class="participant-empty-state">No events attended.</div>';
+            }
+            html += '</div>';
+
+            // Milestones Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Milestones</h3>';
+            if (data.milestones && data.milestones.length > 0) {
+                html += '<ul class="participant-milestones-list">';
+                data.milestones.forEach(milestone => {
+                    const date = milestone.milestonedate ? new Date(milestone.milestonedate).toLocaleDateString() : 'N/A';
+                    html += `<li><span>${milestone.milestonetitle || 'Unknown'}</span><span>${date}</span></li>`;
+                });
+                html += '</ul>';
+            } else {
+                html += '<div class="participant-empty-state">No milestones found.</div>';
+            }
+            html += '</div>';
+
+            modalBody.innerHTML = html;
+        }
+
+        // Close participant modal
+        function closeParticipantModal() {
+            const modal = document.getElementById('participantDetailModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('participantDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeParticipantModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeParticipantModal();
+            }
+        });
+    </script>
+</body>
+</html>

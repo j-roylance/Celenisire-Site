@@ -1,0 +1,83 @@
+DELETED CODE SNIPPETS - For Reference Only
+===========================================
+
+This file contains code snippets that were removed from the codebase because they were unused or could cause issues.
+If you need to revert any changes, refer to this file.
+
+===========================================
+FILE: Intex1-main/Intex1-main/index.js
+===========================================
+
+1. REMOVED: Unused bodyParser import (line 15)
+   REASON: bodyParser is not used - Express has built-in body parsing via express.urlencoded() and express.json()
+   CODE REMOVED:
+   ```
+   let bodyParser = require("body-parser");
+   ```
+
+2. REMOVED: Commented out knexConfig code (lines 25-27)
+   REASON: This code is commented out and not used anywhere
+   CODE REMOVED:
+   ```
+   // const knexConfig = require("./knexfile");
+   const environment = process.env.NODE_ENV || "development";
+   // const knex = require("knex")(knexConfig[environment]);
+   ```
+
+3. REMOVED: Duplicate app.set("view engine", "ejs") (line 18)
+   REASON: Duplicate of line 30 - only one is needed
+   CODE REMOVED:
+   ```
+   app.set("view engine", "ejs");
+   ```
+
+4. REMOVED: Excessive empty lines (lines 117-139)
+   REASON: Cleanup - excessive whitespace
+   CODE REMOVED:
+   ```
+   (multiple empty lines)
+   ```
+
+5. REMOVED: Unused 'environment' variable (line 26)
+   REASON: Only used in commented-out code
+   CODE REMOVED:
+   ```
+   const environment = process.env.NODE_ENV || "development";
+   ```
+
+===========================================
+BUG FIXES APPLIED
+===========================================
+
+1. FIXED: searchEvent route bug (lines 664-667)
+   ISSUE: Route was rendering empty events array instead of search results
+   BEFORE:
+   ```
+   .then(events => {
+     if (req.session.level === 'M') {
+     res.render("manager/mEvent", {user: req.session, events: []});
+     } else {
+     res.render("user/uEvent", {user: req.session, events: []});
+     }
+   ```
+   AFTER:
+   ```
+   .then(events => {
+     if (req.session.level === 'M') {
+     res.render("manager/mEvent", {user: req.session, events: events, allEvents: events});
+     } else {
+     res.render("user/uEvent", {user: req.session, events: events, allEvents: events});
+     }
+   ```
+
+6. ADDED: Missing whereNotNull clause in searchEvent route
+   REASON: For consistency with main mEvent route - ensures we only get valid events
+   CODE ADDED:
+   ```
+   .whereNotNull('eventoccurrenceinfo.eventoccurrenceid')
+   ```
+
+===========================================
+DATE: 2025-01-27
+===========================================
+

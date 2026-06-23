@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <!-- Horizon line -->
+  <path d="M8 72 Q30 68 60 70 Q90 72 112 68" stroke="#6B9B4A" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <!-- Sun semi-circle -->
+  <path d="M30 70 A30 30 0 0 1 90 70" fill="#C5E89A" stroke="#6B9B4A" stroke-width="2"/>
+  <!-- Sun rays - hand-painted style strokes -->
+  <line x1="60" y1="8" x2="60" y2="28" stroke="#C5E89A" stroke-width="5" stroke-linecap="round"/>
+  <line x1="38" y1="16" x2="46" y2="32" stroke="#C5E89A" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="82" y1="16" x2="74" y2="32" stroke="#C5E89A" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="22" y1="32" x2="34" y2="42" stroke="#B8D4A0" stroke-width="4" stroke-linecap="round"/>
+  <line x1="98" y1="32" x2="86" y2="42" stroke="#B8D4A0" stroke-width="4" stroke-linecap="round"/>
+  <line x1="14" y1="52" x2="28" y2="56" stroke="#B8D4A0" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="106" y1="52" x2="92" y2="56" stroke="#B8D4A0" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="48" y1="12" x2="54" y2="30" stroke="#DFF0C8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="72" y1="12" x2="66" y2="30" stroke="#DFF0C8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="30" y1="24" x2="40" y2="38" stroke="#DFF0C8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="90" y1="24" x2="80" y2="38" stroke="#DFF0C8" stroke-width="3" stroke-linecap="round"/>
+</svg>

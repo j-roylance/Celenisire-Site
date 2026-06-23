@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Ella Rises - Empowering Women in Crisis</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        /* Override flex for landing page sections to prevent layout issues */
+        .landing-section.section {
+            flex: 0 0 auto;
+        }
+
+        .hero.section {
+            flex: 0 0 auto;
+        }
+
+        /* Landing page specific styles */
+        .landing-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .landing-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .landing-section.fade-out {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        /* Carousel styles */
+        .sponsors-carousel {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding: 2rem 0;
+            mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+        }
+
+        .sponsors-track {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 30s linear infinite;
+            will-change: transform;
+            width: fit-content;
+        }
+
+        .sponsors-track:hover {
+            animation-play-state: paused;
+        }
+
+        .sponsor-card {
+            flex-shrink: 0;
+            width: 280px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 1rem;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .sponsor-card {
+                width: 200px;
+                height: 130px;
+                padding: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sponsor-card {
+                width: 160px;
+                height: 100px;
+                padding: 0.5rem;
+            }
+        }
+
+        .sponsor-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .sponsor-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-280px * 13 - 2rem * 13));
+            }
+        }
+
+        .hero-content h1 {
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+        }
+
+        .hero-content p {
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+        }
+
+        .hero-content .btn {
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth card animations */
+        .card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        /* Stat card animations */
+        .stat-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.05);
+        }
+
+        /* Video container smooth reveal */
+        .video-container {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-container.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .responsive-video {
+            width: 100%;
+            height: auto;
+            min-height: 50vh;
+        }
+        
+        @media (max-width: 768px) {
+            .responsive-video {
+                min-height: 40vh;
+            }
+            
+            .hero-content .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .responsive-video {
+                min-height: 30vh;
+            }
+            
+            .hero-content .btn {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="landing-page">
+    <!--Navigation-->
+    <%- include('./partials/navbar') %>
+
+    <!-- Hero Section -->
+    <section class="hero landing-section" style="position: relative;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.7); z-index: 1;"></div>
+        <div class="hero-content" style="position: relative; z-index: 2;">
+            <h1 style="font-family: 'DM Serif Display', serif;">Welcome to Ella Rises</h1>
+            <p style="font-size: 1.2rem; font-weight: 400;">Inviting young women to pursue higher education and embrace their heritage by providing culturally rooted programs and educational experiences.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <a href="/visitorDonation" class="btn btn-primary" style="min-width: 200px;">Make a Donation</a>
+                <% if (user && user.level !== 'M' && user.level !== 'U') { %>
+                <a href="/login" class="btn btn-secondary" style="min-width: 200px;">Login</a>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="section landing-section" style="background-color: var(--pastel-pink-primary); position: relative; padding: 0; overflow: hidden;">
+        <div class="video-container" style="width: 100%; position: relative; margin: 0; border-radius: 0; overflow: hidden;">
+            <video 
+                controls
+                style="width: 100%; height: auto; min-height: 70vh; object-fit: cover; display: block;" 
+                preload="metadata" 
+                muted
+                autoplay 
+                loop 
+                playsinline 
+                src="https://video.wixstatic.com/video/e5f869_f075e19ca2744354bb20a65881dce28f/1080p/mp4/file.mp4"
+                class="responsive-video">
+                Your browser does not support the video tag.
+            </video>
+            <!-- Overlay for better text readability (dark overlay, not pink) -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.4) 100%); z-index: 1;"></div>
+            <!-- Text overlay -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; text-align: center;">
+                <h2 class="section-title" style="color: var(--white); text-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.3); margin-bottom: 2rem; font-size: clamp(2.5rem, 5vw, 4rem);">Our Mission</h2>
+                <p class="section-subtitle" style="color: var(--white); font-size: clamp(1.1rem, 2.5vw, 1.5rem); line-height: 1.8; text-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3); max-width: 900px;">Empowering young women to pursue higher education through high-impact multicultural activities focused on Science, Tech, Engineering, Arts, and Math.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do Section -->
+    <section class="section landing-section" style="background-image: url('/Image Generation Request Dec 2 2025 (1).png'); background-size: cover; background-position: center -1000px; background-attachment: fixed; background-repeat: no-repeat; position: relative; padding: 5rem 2rem;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.85); z-index: 1;"></div>
+        <div class="container" style="position: relative; z-index: 2;">
+            <h2 class="section-title" style="color: var(--pastel-pink-dark); margin-bottom: 3rem;">How We Help</h2>
+            <div class="cards-grid">
+                <div class="card" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 182, 193, 0.3);">
+                    <h3 style="color: var(--pastel-pink-dark);">Career Development</h3>
+                    <p style="color: var(--text-light);">Offering hands-on college-sponsored professional experiences for teenagers and youth.</p>
+                    <img src="/WrinklyLabCoat.jpg" alt="Career Development" style="width: 100%; border-radius: 12px; margin-top: 1rem; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="card" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 182, 193, 0.3);">
+                    <h3 style="color: var(--pastel-pink-dark);">Education Programs</h3>
+                    <p style="color: var(--text-light);">Supporting educational advancement through scholarships, tutoring, and life skills workshops.</p>
+                    <img src="/MarkersNSuch.jpg" alt="Education Programs" style="width: 100%; border-radius: 12px; margin-top: 1rem; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="card" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 182, 193, 0.3);">
+                    <h3 style="color: var(--pastel-pink-dark);">Arts Education</h3>
+                    <p style="color: var(--text-light);">Giving resourcs for painting, musical performance, and other arts subjects to inspire creativity and self-expression.</p>
+                    <img src="/ArtWall.jpg" alt="Arts Education" style="width: 100%; border-radius: 12px; margin-top: 1rem; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section landing-section" style="background-color: var(--pastel-pink-primary); position: relative; padding: 5rem 2rem;">
+        <div class="container" style="position: relative; z-index: 2;">
+            <h2 class="section-title" style="color: var(--white); text-shadow: 0 2px 20px rgba(0,0,0,0.1); margin-bottom: 3rem;">Thanks To Our Sponsors!</h2>
+            <div class="sponsors-carousel">
+                <div class="sponsors-track">
+                    <!-- First set of sponsor images -->
+                    <div class="sponsor-card">
+                        <img src="/sponsors/1.png" alt="Sponsor 1">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/2.png" alt="Sponsor 2">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/3.png" alt="Sponsor 3">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/4.png" alt="Sponsor 4">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/5.png" alt="Sponsor 5">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/6.png" alt="Sponsor 6">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/10.png" alt="Sponsor 10">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/11.png" alt="Sponsor 11">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/12.png" alt="Sponsor 12">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/13.png" alt="Sponsor 13">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/14.png" alt="Sponsor 14">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/15.png" alt="Sponsor 15">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/16.png" alt="Sponsor 16">
+                    </div>
+                    <!-- Duplicate set for seamless loop -->
+                    <div class="sponsor-card">
+                        <img src="/sponsors/1.png" alt="Sponsor 1">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/2.png" alt="Sponsor 2">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/3.png" alt="Sponsor 3">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/4.png" alt="Sponsor 4">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/5.png" alt="Sponsor 5">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/6.png" alt="Sponsor 6">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/10.png" alt="Sponsor 10">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/11.png" alt="Sponsor 11">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/12.png" alt="Sponsor 12">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/13.png" alt="Sponsor 13">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/14.png" alt="Sponsor 14">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/15.png" alt="Sponsor 15">
+                    </div>
+                    <div class="sponsor-card">
+                        <img src="/sponsors/16.png" alt="Sponsor 16">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section landing-section" style="padding: 5rem 2rem; background-color: var(--white); position: relative;">
+        <div class="container" style="text-align: center; position: relative; z-index: 2;">
+            <h2 class="section-title" style="color: var(--pastel-pink-dark); margin-bottom: 1.5rem;">Make a Difference Today</h2>
+            <p class="section-subtitle" style="color: var(--text-light); font-size: 1.2rem; max-width: 700px; margin: 0 auto 2.5rem;">Your generosity helps us provide critical services and support to young women in STEAM . Every donation, big or small, creates lasting change.</p>
+            <a href="/visitorDonation" class="btn btn-primary" style="font-size: 1.1rem; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);">Donate Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll reveal animations with fade in/out
+        const observerOptions = {
+            threshold: [0, 0.1, 0.3, 0.5, 0.7, 1],
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const rect = entry.boundingClientRect;
+                const viewportHeight = window.innerHeight;
+                const isInView = entry.isIntersecting && rect.top < viewportHeight && rect.bottom > 0;
+                
+                if (isInView) {
+                    entry.target.classList.add('visible');
+                    entry.target.classList.remove('fade-out');
+                } else {
+                    // Fade out when scrolling away
+                    if (rect.bottom < 0 || rect.top > viewportHeight) {
+                        entry.target.classList.remove('visible');
+                        entry.target.classList.add('fade-out');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all landing sections
+        document.querySelectorAll('.landing-section').forEach(section => {
+            observer.observe(section);
+            // Make hero section visible immediately on load if it's in view
+            if (section.classList.contains('hero')) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    section.classList.add('visible');
+                }
+            }
+        });
+
+        // Observe video container
+        const videoContainer = document.querySelector('.video-container');
+        if (videoContainer) {
+            observer.observe(videoContainer);
+        }
+
+        // Smooth number counting animation for stats
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                const text = element.textContent;
+                const number = text.match(/\d+/);
+                if (number) {
+                    element.textContent = text.replace(/\d+/, current.toLocaleString() + (text.includes('+') ? '+' : ''));
+                }
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Animate stats when they come into view
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    entry.target.classList.add('animated');
+                    const statNumber = entry.target.querySelector('.stat-number');
+                    if (statNumber) {
+                        const text = statNumber.textContent;
+                        const number = parseInt(text.replace(/[^0-9]/g, ''));
+                        if (number) {
+                            animateValue(statNumber, 0, number, 2000);
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            statObserver.observe(card);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1 @@
+add a logout button to the right of manager/user page

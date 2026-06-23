@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Tableau Dashboard - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .section {
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        .tableau-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin: 2rem auto 0;
+            padding: 0rem;
+            min-height: 600px;
+            width: 98%;
+            max-width: 1650px;
+        }
+
+        .tableau-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--light-bg);
+            border-radius: 11px;
+            padding: 0.1rem;
+        }
+
+        .tableau-wrapper iframe {
+            width: 100% !important;
+            max-width: 100% !important;
+            border: none;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--dark-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Prevent horizontal scrolling */
+        body {
+            overflow-x: hidden;
+        }
+
+        .section {
+            overflow-x: hidden;
+            flex: 1;
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .tableau-container {
+                padding: 0.5rem;
+                width: 100%;
+                margin: 1rem auto 0;
+            }
+
+            .tableau-wrapper {
+                padding: 0.25rem;
+            }
+
+            .tableau-wrapper iframe {
+                min-height: 600px !important;
+            }
+
+            .section {
+                padding: 2rem 0.5rem !important;
+            }
+
+            .page-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .page-header h1 {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+
+            .page-header p {
+                font-size: clamp(0.9rem, 2.5vw, 1rem);
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tableau-container {
+                padding: 0.25rem;
+                margin: 0.5rem auto 0;
+            }
+
+            .tableau-wrapper iframe {
+                min-height: 500px !important;
+            }
+
+            .section {
+                padding: 1.5rem 0.25rem !important;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('./partials/navbar')%>
+
+    <!-- Main Content Section -->
+    <section class="section" style="background-color: var(--white) !important; background-image: none !important; padding: 2rem 2rem; min-height: calc(100vh - 200px);">
+        <div class="container" style="max-width: 100%; margin: 0 auto; padding: 0;">
+            <!-- Page Header -->
+            <div class="page-header" style="text-align: center; margin-bottom: 3rem; background-color: transparent; padding: 0;">
+                <h1>Tableau Dashboard</h1>
+                <p>Interactive analytics and visualizations for Ella Rises data.</p>
+            </div>
+            
+            <!-- Tableau Dashboard Container -->
+            <div class="tableau-container">
+                <div class="tableau-wrapper">
+                    <iframe 
+                        src="https://public.tableau.com/views/INTEXFINAL/Dashboard1?:embed=y&:showVizHome=no&:host_url=https%3A%2F%2Fpublic.tableau.com%2F&:embed_code_version=3&:tabs=no&:toolbar=yes&:animate_transition=yes&:display_static_image=yes&:display_spinner=yes&:display_overlay=yes&:display_count=yes&:language=en-US"
+                        width="100%" 
+                        height="927" 
+                        frameborder="0"
+                        style="border: none; min-height: 927px;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script type='text/javascript'>
+        // Responsive iframe height adjustment
+        window.addEventListener('resize', function() {
+            var iframe = document.querySelector('.tableau-wrapper iframe');
+            if (iframe) {
+                if (window.innerWidth > 800) {
+                    iframe.style.height = '927px';
+                } else if (window.innerWidth > 500) {
+                    iframe.style.height = '927px';
+                } else {
+                    iframe.style.height = '2327px';
+                }
+            }
+        });
+        
+        // Set initial height
+        window.addEventListener('load', function() {
+            var iframe = document.querySelector('.tableau-wrapper iframe');
+            if (iframe) {
+                if (window.innerWidth > 800) {
+                    iframe.style.height = '927px';
+                } else if (window.innerWidth > 500) {
+                    iframe.style.height = '927px';
+                } else {
+                    iframe.style.height = '2327px';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

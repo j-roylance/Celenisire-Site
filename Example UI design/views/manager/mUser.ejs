@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>User Maintenance - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        .section {
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        /* Enhanced search and action bar */
+        .search-action-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-action-bar:hover {
+            box-shadow: 0 12px 40px rgba(58, 63, 59, 0.12);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            border-radius: 50px;
+            padding: 0.875rem 2rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.35);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pastel-pink-primary) 0%, var(--pastel-pink-dark) 100%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pastel-pink-dark) 0%, var(--pastel-pink-primary) 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--pastel-pink-primary);
+            color: var(--pastel-pink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--pastel-pink-lighter);
+            border-color: var(--pastel-pink-dark);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--dark-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Modern List-Based Design */
+        .modern-list-container {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .modern-list-header {
+            background: var(--light-bg);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .modern-list-header h2 {
+            margin: 0;
+            color: var(--dark-charcoal);
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'DM Serif Display', serif;
+        }
+
+        .modern-list-item {
+            display: flex;
+            align-items: center;
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--white);
+        }
+
+        .modern-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .modern-list-item:hover {
+            background: var(--pastel-pink-lighter);
+            transform: translateX(4px);
+            box-shadow: -4px 0 0 var(--pastel-pink-primary);
+        }
+
+        .list-item-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr;
+            gap: 3rem;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .list-item-field {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            padding-right: 1rem;
+        }
+
+        .list-item-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .list-item-value {
+            font-size: 1rem;
+            color: var(--dark-charcoal);
+            font-weight: 500;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .list-item-badge {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-manager {
+            background: linear-gradient(135deg, var(--pastel-pink-dark) 0%, var(--pastel-pink-primary) 100%);
+            color: var(--white);
+        }
+
+        .badge-user {
+            background: var(--pastel-pink-lighter);
+            color: var(--pastel-pink-dark);
+            border: 1.5px solid var(--pastel-pink-primary);
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: 2rem;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .search-action-bar {
+                padding: 1rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .list-item-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .list-item-actions {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('../partials/navbar')%>
+
+    <!-- Main Content Section -->
+    <section class="section" style="background-color: var(--white) !important; background-image: none !important; padding: 4rem 2rem; min-height: auto; overflow-y: visible;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0;">
+            <!-- Page Header -->
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; background-color: transparent; padding: 0;">
+                <div style="flex: 1; text-align: center;">
+                    <h1>User Maintenance</h1>
+                    <p>Manage system users, staff members, and volunteers. Manager access only.</p>
+                </div>
+                <form method="GET" action="/teapot" style="margin-left: auto;">
+                    <button type="submit" class="btn btn-secondary" style="white-space: nowrap;">Surprise Me!</button>
+                </form>
+            </div>
+            
+            <!-- Search and Action Bar -->
+            <div class="search-action-bar">
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openModal('userModal', 'add')">
+                        Add New User
+                    </button>
+                </div>
+            </div>
+         
+            <!-- Display error message for self-delete attempt -->
+            <script>
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('error') === 'cannot_delete_self') {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-error';
+                        alertDiv.role = 'alert';
+                        alertDiv.textContent = 'You cannot delete your own account while logged in.';
+                        const container = document.querySelector('.container');
+                        const actionBar = document.querySelector('.search-action-bar');
+                        container.insertBefore(alertDiv, actionBar.nextSibling);
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    });
+                }
+            </script>
+            
+            <!-- Display error message if available -->
+            <% if (typeof error_message !== 'undefined' && error_message) { %>
+                <div class="alert alert-error" role="alert">
+                    <%= error_message %>
+                </div>
+            <% } %>
+            
+            <!-- Content Area -->
+            <div style="margin-top: 2.5rem;">
+                <!-- Display users list -->
+                <% if (users.length === 0) { %>
+                    <div class="modern-list-container">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👤</div>
+                            <p>No users found in the database.</p>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="modern-list-container">
+                        <div class="modern-list-header">
+                            <h2>User List</h2>
+                        </div>
+                        <% for (let iCount = 0; iCount < users.length; iCount++) { %>
+                            <div class="modern-list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-field">
+                                        <span class="list-item-label">Username</span>
+                                        <span class="list-item-value"><%= users[iCount].username %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="list-item-label">Password</span>
+                                        <span class="list-item-value">••••••••</span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="list-item-label">Level</span>
+                                        <% if (users[iCount].level === 'M') { %>
+                                            <span class="list-item-badge badge-manager">Manager</span>
+                                        <% } else { %>
+                                            <span class="list-item-badge badge-user">User</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="list-item-actions">
+                                    <button class="btn btn-secondary btn-sm" 
+                                            onclick="openModal('userModal', 'edit', {
+                                                username: '<%= users[iCount].username %>',
+                                                password: '<%= users[iCount].password %>',
+                                                level: '<%= users[iCount].level %>'
+                                            })">Edit</button>
+                                    <button class="btn btn-danger btn-sm" 
+                                            onclick="openDeleteModal('/mUser/delete/<%= users[iCount].username %>', '<%= users[iCount].username %>')">Delete</button>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include the add/edit modal -->
+    <%- include('../partials/addEditModal', {
+        modalId: 'userModal',
+        modalTitle: 'Add User',
+        formId: 'userModal-form',
+        formAction: '/mUser/save',
+        fields: [
+            { name: 'username', label: 'Username', type: 'text', required: true },
+            { name: 'password', label: 'Password', type: 'text', required: true },
+            { 
+                name: 'level', 
+                label: 'Level', 
+                type: 'select', 
+                required: true,
+                options: [
+                    { value: 'U', text: 'User' },
+                    { value: 'M', text: 'Manager' }
+                ]
+            }
+        ]
+    }) %>
+
+    <!-- Include the delete confirmation modal -->
+    <%- include('../partials/deleteConfirmModal') %>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script src="/modalHelper.js"></script>
+</body>
+</html>

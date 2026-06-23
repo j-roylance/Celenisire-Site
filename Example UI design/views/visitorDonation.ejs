@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Donate - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        /* Landing page specific styles */
+        .landing-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .landing-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .landing-section.fade-out {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        /* Smooth card animations */
+        .card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(255, 182, 193, 0.25);
+        }
+
+        /* Form styling enhancements */
+        .form-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 182, 193, 0.2);
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.08);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--pastel-pink-dark);
+            box-shadow: 0 0 0 3px rgba(216, 112, 147, 0.15);
+            outline: none;
+        }
+        
+        .form-group label {
+            color: var(--dark-charcoal);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border: 1.5px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: var(--pastel-pink-primary);
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('./partials/navbar') %>
+    
+    <!-- Donation Form -->
+    <section class="section landing-section" style="background-color: var(--white); background-image: none !important; padding: 6rem 2rem; overflow-y: visible; min-height: auto;">
+        <div class="form-container" style="max-width: 700px; margin: 0 auto; border-radius: 20px; padding: 3rem;">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h1 style="font-family: 'DM Serif Display', serif; color: var(--dark-charcoal); margin-bottom: 1rem;">Make a Difference Today!</h1>
+                <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 2rem;">Your generosity helps us provide critical services and support to young women in STEAM . Every donation, big or small, creates lasting change.</p>
+            </div>
+            <h2 style="color: var(--dark-charcoal); text-align: center; margin-bottom: 1.5rem; font-size: clamp(1.8rem, 3vw, 2.5rem);">Donation Information</h2>
+            
+            <!-- Initial Donate Button -->
+            <div id="donateButtonContainer" style="text-align: center; margin: 3rem 0;">
+                <button type="button" class="btn btn-primary" onclick="openEmailModal()" style="font-size: 1.2rem; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);">
+                    Start Donation
+                </button>
+            </div>
+            
+            <!-- Donation Form (initially hidden) -->
+            <form id="donationForm" style="display: none;">
+                <!-- Donation Amount -->
+                <div class="form-group">
+                    <label>Donation Amount</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="25">$25</button>
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="50">$50</button>
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="100">$100</button>
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="250">$250</button>
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="500">$500</button>
+                        <button type="button" class="btn btn-secondary btn-amount" data-amount="1000">$1000</button>
+                    </div>
+                    <input type="number" id="customAmount" name="customAmount" placeholder="Or enter custom amount" min="1" step="0.01">
+                </div>
+
+                <!-- Donation Type -->
+                <!-- <div class="form-group">
+                    <label>Donation Type</label>
+                    <select id="donationType" name="donationType">
+                        <option value="one-time">One-Time Donation</option>
+                        <option value="monthly">Monthly Recurring</option>
+                        <option value="yearly">Yearly Recurring</option>
+                    </select>
+                </div> -->
+
+                <div style="border-top: 2px solid var(--pastel-pink-primary); margin: 2rem 0; padding-top: 2rem;">
+                    <h3 style="color: var(--dark-charcoal); margin-bottom: 1rem; font-size: 1.3rem;">Donor Information</h3>
+                </div>
+
+                <!-- Personal Information -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number <span id="phoneRequired" style="color: red; display: none;">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" readonly>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="city">City <span id="cityRequired" style="color: red; display: none;">*</span></label>
+                        <input type="text" id="city" name="city" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State <span id="stateRequired" style="color: red; display: none;">*</span></label>
+                        <input type="text" id="state" name="state" placeholder="UT" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip">ZIP Code <span id="zipRequired" style="color: red; display: none;">*</span></label>
+                        <input type="text" id="zip" name="zip" placeholder="84602" readonly>
+                    </div>
+                </div>
+
+                <!-- <div style="border-top: 1px solid var(--border-color); margin: 2rem 0; padding-top: 2rem;">
+                    <h3 style="color: var(--dark-charcoal); margin-bottom: 1rem;">Payment Information</h3>
+                </div> -->
+
+                <!-- Payment Information -->
+                <!-- <div class="form-group">
+                    <label for="cardNumber">Card Number *</label>
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div> -->
+
+                <!-- <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="expMonth">Exp. Month *</label>
+                        <select id="expMonth" name="expMonth" required>
+                            <option value="">MM</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expYear">Exp. Year *</label>
+                        <select id="expYear" name="expYear" required>
+                            <option value="">YYYY</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV *</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                    </div>
+                </div> -->
+
+                <!-- Additional Options -->
+                <!-- <div class="form-group">
+                    <label for="dedication">Dedication or Message (Optional)</label>
+                    <textarea id="dedication" name="dedication" rows="3" placeholder="In honor of..."></textarea>
+                </div> -->
+
+                <!-- <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" id="anonymous" name="anonymous" style="width: auto;">
+                    <label for="anonymous" style="margin-bottom: 0;">Make this donation anonymous</label>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" id="newsletter" name="newsletter" style="width: auto;">
+                    <label for="newsletter" style="margin-bottom: 0;">Subscribe to our newsletter</label>
+                </div> -->
+
+                <!-- Submit Button -->
+                <div class="form-actions" style="justify-content: center; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1.2rem; border-radius: 50px; box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);">Complete Donation</button>
+                </div>
+
+                <!-- <p style="text-align: center; color: var(--text-light); font-size: 0.85rem; margin-top: 1rem;">
+                    🔒 Your payment information is secure and encrypted. Ella Rises is a 501(c)(3) nonprofit organization. Your donation is tax-deductible.
+                </p> -->
+            </form>
+        </div>
+    </section>
+
+ <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/visitorDonation">Donate</a>
+                <a href="/login">Login</a>
+            </div>
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <!-- Email Modal -->
+    <div id="emailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+            <h2>Enter Your Email</h2>
+            <p style="margin-bottom: 1.5rem;">Please enter your email address to continue with your donation.</p>
+            <form id="emailForm" onsubmit="checkEmail(event)">
+                <div class="form-group">
+                    <label for="emailInput">Email Address *</label>
+                    <input type="email" id="emailInput" name="email" required autofocus>
+                    <div id="emailStatus" style="margin-top: 0.5rem; font-size: 0.9rem;"></div>
+                </div>
+                <div class="form-actions" style="justify-content: center; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEmailModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success/Error Message Modal -->
+    <div id="messageModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px; text-align: center;">
+            <span class="close" onclick="closeMessageModal()">&times;</span>
+            <div id="messageContent"></div>
+            <div class="form-actions" style="justify-content: center; margin-top: 1.5rem;">
+                <button type="button" class="btn btn-primary" onclick="closeMessageModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: 15% auto;
+            padding: 2rem;
+            border: 2px solid var(--pastel-pink-primary);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.15);
+        }
+        
+        .modal-content h2 {
+            color: var(--dark-charcoal);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content p {
+            color: var(--text-light);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+        input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem 1.5rem !important;
+                margin: 1rem !important;
+            }
+
+            .section {
+                padding: 3rem 1rem !important;
+            }
+
+            h1 {
+                font-size: clamp(1.5rem, 5vw, 2rem) !important;
+            }
+
+            h2 {
+                font-size: clamp(1.25rem, 4vw, 1.75rem) !important;
+            }
+
+            /* Donation amount buttons - stack on mobile */
+            .form-group > div[style*="grid-template-columns"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+
+            /* Form fields - stack on mobile */
+            div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            div[style*="grid-template-columns: 2fr 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 0.875rem 1.5rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                padding: 1.5rem;
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 1.5rem 1rem !important;
+            }
+
+            .section {
+                padding: 2rem 0.5rem !important;
+            }
+
+            /* Donation amount buttons - single column on very small screens */
+            .form-group > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            .btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <script>
+        let participantFound = false;
+        let participantId = null;
+
+        // Open email modal
+        function openEmailModal() {
+            document.getElementById('emailModal').style.display = 'block';
+            document.getElementById('emailInput').focus();
+        }
+
+        // Close email modal
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = 'none';
+            document.getElementById('emailForm').reset();
+            document.getElementById('emailStatus').textContent = '';
+        }
+
+        // Close message modal
+        function closeMessageModal() {
+            document.getElementById('messageModal').style.display = 'none';
+            if (document.getElementById('messageContent').classList.contains('success')) {
+                // Reset form and hide it
+                document.getElementById('donationForm').reset();
+                document.getElementById('donationForm').style.display = 'none';
+                document.getElementById('donateButtonContainer').style.display = 'block';
+                participantFound = false;
+                participantId = null;
+            }
+        }
+
+        // Check email and populate form
+        function checkEmail(event) {
+            event.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+            const emailStatus = document.getElementById('emailStatus');
+            
+            if (!email) {
+                emailStatus.innerHTML = '<span style="color: red;">Please enter an email address</span>';
+                return;
+            }
+
+            emailStatus.innerHTML = '<span style="color: #666;">Checking email...</span>';
+
+            fetch('/checkParticipantEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.found) {
+                    participantFound = true;
+                    participantId = data.participant.participantid;
+                    emailStatus.innerHTML = '<span style="color: green;">✓ Email found</span>';
+                    
+                    // Close email modal
+                    closeEmailModal();
+                    
+                    // Populate form with participant data and make fields readonly
+                    document.getElementById('email').value = data.participant.participantemail;
+                    document.getElementById('firstName').value = data.participant.participantfirstname || '';
+                    document.getElementById('lastName').value = data.participant.participantlastname || '';
+                    document.getElementById('phone').value = data.participant.participantphone || '';
+                    document.getElementById('city').value = data.participant.participantcity || '';
+                    document.getElementById('state').value = data.participant.participantstate || '';
+                    document.getElementById('zip').value = data.participant.participantzip || '';
+                    
+                    // Make all participant fields readonly
+                    document.getElementById('email').setAttribute('readonly', 'readonly');
+                    document.getElementById('firstName').setAttribute('readonly', 'readonly');
+                    document.getElementById('lastName').setAttribute('readonly', 'readonly');
+                    document.getElementById('phone').setAttribute('readonly', 'readonly');
+                    document.getElementById('city').setAttribute('readonly', 'readonly');
+                    document.getElementById('state').setAttribute('readonly', 'readonly');
+                    document.getElementById('zip').setAttribute('readonly', 'readonly');
+                    
+                    // Remove required indicators
+                    document.getElementById('phoneRequired').style.display = 'none';
+                    document.getElementById('cityRequired').style.display = 'none';
+                    document.getElementById('stateRequired').style.display = 'none';
+                    document.getElementById('zipRequired').style.display = 'none';
+                    document.getElementById('phone').removeAttribute('required');
+                    document.getElementById('city').removeAttribute('required');
+                    document.getElementById('state').removeAttribute('required');
+                    document.getElementById('zip').removeAttribute('required');
+                    
+                    // Show form
+                    document.getElementById('donateButtonContainer').style.display = 'none';
+                    document.getElementById('donationForm').style.display = 'block';
+                    
+                    // Scroll to form smoothly
+                    setTimeout(() => {
+                        document.getElementById('donationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else {
+                    participantFound = false;
+                    participantId = null;
+                    emailStatus.innerHTML = '<span style="color: orange;">Email not found. You can fill out your information below.</span>';
+                    
+                    // Close email modal
+                    closeEmailModal();
+                    
+                    // Clear form and make fields editable
+                    document.getElementById('email').value = email;
+                    document.getElementById('firstName').value = '';
+                    document.getElementById('lastName').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('city').value = '';
+                    document.getElementById('state').value = '';
+                    document.getElementById('zip').value = '';
+                    
+                    // Remove readonly from fields
+                    document.getElementById('email').removeAttribute('readonly');
+                    document.getElementById('firstName').removeAttribute('readonly');
+                    document.getElementById('lastName').removeAttribute('readonly');
+                    document.getElementById('phone').removeAttribute('readonly');
+                    document.getElementById('city').removeAttribute('readonly');
+                    document.getElementById('state').removeAttribute('readonly');
+                    document.getElementById('zip').removeAttribute('readonly');
+                    
+                    // Add required indicators for new participants
+                    document.getElementById('phoneRequired').style.display = 'inline';
+                    document.getElementById('cityRequired').style.display = 'inline';
+                    document.getElementById('stateRequired').style.display = 'inline';
+                    document.getElementById('zipRequired').style.display = 'inline';
+                    document.getElementById('phone').setAttribute('required', 'required');
+                    document.getElementById('city').setAttribute('required', 'required');
+                    document.getElementById('state').setAttribute('required', 'required');
+                    document.getElementById('zip').setAttribute('required', 'required');
+                    
+                    // Show form
+                    document.getElementById('donateButtonContainer').style.display = 'none';
+                    document.getElementById('donationForm').style.display = 'block';
+                    
+                    // Scroll to form smoothly
+                    setTimeout(() => {
+                        document.getElementById('donationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            })
+            .catch(error => {
+                console.error('Error checking email:', error);
+                emailStatus.innerHTML = '<span style="color: red;">Error checking email. Please try again.</span>';
+            });
+        }
+
+        // Amount button selection
+        const amountButtons = document.querySelectorAll('.btn-amount');
+        const customAmountInput = document.getElementById('customAmount');
+        
+        amountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                amountButtons.forEach(btn => btn.classList.remove('btn-primary'));
+                amountButtons.forEach(btn => btn.classList.add('btn-secondary'));
+                this.classList.remove('btn-secondary');
+                this.classList.add('btn-primary');
+                customAmountInput.value = this.dataset.amount;
+            });
+        });
+
+        // Form submission
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form elements with null checks
+            const emailEl = document.getElementById('email');
+            const firstNameEl = document.getElementById('firstName');
+            const lastNameEl = document.getElementById('lastName');
+            const phoneEl = document.getElementById('phone');
+            const cityEl = document.getElementById('city');
+            const stateEl = document.getElementById('state');
+            const zipEl = document.getElementById('zip');
+            const customAmountEl = document.getElementById('customAmount');
+            
+            // Check if form is visible and elements exist
+            if (!emailEl || !firstNameEl || !lastNameEl || !customAmountEl) {
+                console.error('Required form elements not found');
+                showMessage('Form error: Please refresh the page and try again.', false);
+                return;
+            }
+            
+            const formData = {
+                email: emailEl.value,
+                firstName: firstNameEl.value,
+                lastName: lastNameEl.value,
+                phone: phoneEl ? phoneEl.value : '',
+                city: cityEl ? cityEl.value : '',
+                state: stateEl ? stateEl.value : '',
+                zip: zipEl ? zipEl.value : '',
+                customAmount: customAmountEl.value
+            };
+            
+            // Validate required fields
+            if (!formData.email || !formData.firstName || !formData.lastName || !formData.customAmount) {
+                showMessage('Please fill out all required fields (Email, First Name, Last Name, and Donation Amount).', false);
+                return;
+            }
+            
+            // If participant not found, validate required participant fields
+            if (!participantFound) {
+                if (!formData.phone || !formData.city || !formData.state || !formData.zip) {
+                    showMessage('Please fill out all required participant information (Phone, City, State, ZIP Code).', false);
+                    return;
+                }
+            }
+            
+            // Submit donation
+            fetch('/submitVisitorDonation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, true);
+                    this.reset();
+                } else {
+                    showMessage(data.message, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting donation:', error);
+                showMessage('An error occurred while processing your donation. Please try again.', false);
+            });
+        });
+
+        // Show message modal
+        function showMessage(message, isSuccess) {
+            const messageContent = document.getElementById('messageContent');
+            messageContent.innerHTML = isSuccess 
+                ? `<div style="color: #155724;"><h2 style="color: #155724;">✓ Success!</h2><p>${message}</p></div>`
+                : `<div style="color: #721c24;"><h2 style="color: #721c24;">⚠ Error</h2><p>${message}</p></div>`;
+            messageContent.className = isSuccess ? 'success' : 'error';
+            document.getElementById('messageModal').style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const emailModal = document.getElementById('emailModal');
+            const messageModal = document.getElementById('messageModal');
+            if (event.target === emailModal) {
+                closeEmailModal();
+            }
+            if (event.target === messageModal) {
+                closeMessageModal();
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeEmailModal();
+                closeMessageModal();
+            }
+        });
+
+        // Smooth scroll reveal animations with fade in/out
+        const observerOptions = {
+            threshold: [0, 0.1, 0.3, 0.5, 0.7, 1],
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const rect = entry.boundingClientRect;
+                const viewportHeight = window.innerHeight;
+                const isInView = entry.isIntersecting && rect.top < viewportHeight && rect.bottom > 0;
+                
+                if (isInView) {
+                    entry.target.classList.add('visible');
+                    entry.target.classList.remove('fade-out');
+                } else {
+                    // Fade out when scrolling away
+                    if (rect.bottom < 0 || rect.top > viewportHeight) {
+                        entry.target.classList.remove('visible');
+                        entry.target.classList.add('fade-out');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all landing sections
+        document.querySelectorAll('.landing-section').forEach(section => {
+            observer.observe(section);
+            // Make hero section visible immediately on load if it's in view
+            if (section.classList.contains('hero')) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    section.classList.add('visible');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

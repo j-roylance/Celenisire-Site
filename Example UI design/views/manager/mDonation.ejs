@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Donations Maintenance - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        .section {
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        /* Enhanced search and action bar */
+        .search-action-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-action-bar:hover {
+            box-shadow: 0 12px 40px rgba(58, 63, 59, 0.12);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 1.5px solid rgba(255, 182, 193, 0.3);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--pastel-pink-dark);
+            box-shadow: 0 0 0 3px rgba(216, 112, 147, 0.15);
+            background: var(--white);
+        }
+
+        .search-box input:hover {
+            border-color: var(--pastel-pink-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            border-radius: 50px;
+            padding: 0.875rem 2rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.35);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pastel-pink-primary) 0%, var(--pastel-pink-dark) 100%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pastel-pink-dark) 0%, var(--pastel-pink-primary) 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--pastel-pink-primary);
+            color: var(--pastel-pink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--pastel-pink-lighter);
+            border-color: var(--pastel-pink-dark);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--dark-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .search-action-bar {
+                padding: 1rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('../partials/navbar')%>
+
+    <!-- Main Content Section -->
+    <section class="section" style="background-color: var(--white) !important; background-image: none !important; padding: 4rem 2rem; min-height: auto; overflow-y: visible;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0;">
+            <!-- Page Header -->
+            <div class="page-header" style="text-align: center; margin-bottom: 3rem; background-color: transparent; padding: 0;">
+                <h1>Donations Maintenance</h1>
+                <p>Manage donation records and donor information. Manager access only.</p>
+            </div>
+            
+            <!-- Search and Action Bar -->
+            <div class="search-action-bar">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" name="search" placeholder="Search donations..." autocomplete="off">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openModal('donationModal', 'add')">
+                        Add New Donation
+                    </button>
+                </div>
+            </div>
+         
+            <!-- Content Area -->
+            <div style="margin-top: 2.5rem;">
+                <h2 class="mb-4" style="font-family: 'DM Serif Display', serif; color: var(--dark-charcoal); font-size: 2rem; margin-bottom: 1.5rem;">Donation List</h2>
+            
+            <!-- Display error message if available -->
+            <% if (typeof error_message !== 'undefined' && error_message) { %>
+                <div class="alert alert-error" role="alert">
+                    <%= error_message %>
+                </div>
+            <% } %>
+            
+            <!-- Display donations list -->
+            <div id="donationCardsContainer" class="participant-cards-grid">
+                <!-- Cards will be dynamically rendered here -->
+            </div>
+            <div id="noDonationsMessage" class="alert alert-error" role="alert" style="display: none;">
+                No Donations found.
+            </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include the add/edit modal -->
+    <%- include('../partials/addEditModal', {
+        modalId: 'donationModal',
+        modalTitle: 'Add Donation',
+        formId: 'donationModal-form',
+        formAction: '/mDonation/save',
+        fields: [
+            { name: 'donationamount', label: 'Donation Amount ($)', type: 'float', required: true },
+            { name: 'donationtime', label: 'Donation Date/Time', type: 'datetime-local', required: false }
+        ]
+    }) %>
+
+    <!-- Include the delete confirmation modal -->
+    <%- include('../partials/deleteConfirmModal') %>
+
+    <!-- Donation Detail Modal -->
+    <div id="donationDetailModal" class="participant-modal">
+        <div class="participant-modal-content">
+            <div class="participant-modal-header">
+                <h2 id="donationModalTitle">Donation Details</h2>
+                <span class="participant-modal-close" onclick="closeDonationModal()">&times;</span>
+            </div>
+            <div class="participant-modal-body" id="donationModalBody">
+                <div style="text-align: center; padding: 2rem;">
+                    <p>Loading donation details...</p>
+                </div>
+            </div>
+            <div class="participant-modal-footer" id="donationModalFooter" style="display: none;">
+                <button class="btn btn-secondary" id="donationEditBtn">Edit</button>
+                <button class="btn btn-danger" id="donationDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit All Donations Modal -->
+    <div id="editAllDonationsModal" class="participant-modal"> 
+        <div class="participant-modal-content">
+            <div class="participant-modal-header">
+                <h2 id="editAllDonationsModalTitle">Edit All Donations</h2>
+                <span class="participant-modal-close" onclick="closeEditAllDonationsModal()">&times;</span>
+            </div>
+            <div class="participant-modal-body" id="editAllDonationsModalBody">
+                <!-- Donations list will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script src="/modalHelper.js"></script>
+    <script>
+        let currentDonationData = null;
+        let allDonations = <%- JSON.stringify(allDonations || []) %>;
+        let displayedDonations = [];
+
+        // Initialize page - show 20 random donations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Shuffle and get 20 random donations
+            const shuffled = [...allDonations].sort(() => 0.5 - Math.random());
+            displayedDonations = shuffled.slice(0, 20);
+            renderDonationCards(displayedDonations);
+
+            // Set up real-time search
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filterDonations(this.value.trim());
+                });
+            }
+        });
+
+        // Filter donations based on search term
+        function filterDonations(searchTerm) {
+            if (!searchTerm) {
+                // If search is empty, show 20 random donations
+                const shuffled = [...allDonations].sort(() => 0.5 - Math.random());
+                displayedDonations = shuffled.slice(0, 20);
+            } else {
+                // Filter donations that match search term
+                const searchLower = searchTerm.toLowerCase();
+                displayedDonations = allDonations.filter(donation => {
+                    const firstName = (donation.participantfirstname || '').toLowerCase();
+                    const lastName = (donation.participantlastname || '').toLowerCase();
+                    const fullName = `${firstName} ${lastName}`;
+                    const reverseFullName = `${lastName} ${firstName}`;
+                    const email = (donation.participantemail || '').toLowerCase();
+                    const amount = parseFloat(donation.donationamount || 0).toString();
+                    
+                    return firstName.startsWith(searchLower) || 
+                           lastName.startsWith(searchLower) ||
+                           fullName.startsWith(searchLower) ||
+                           reverseFullName.startsWith(searchLower) ||
+                           email.includes(searchLower) ||
+                           amount.includes(searchLower) ||
+                           firstName.includes(searchLower) || 
+                           lastName.includes(searchLower);
+                });
+            }
+            renderDonationCards(displayedDonations);
+        }
+
+        // Render donation cards - only show latest donation per participant
+        function renderDonationCards(donations) {
+            const container = document.getElementById('donationCardsContainer');
+            const noResultsMessage = document.getElementById('noDonationsMessage');
+            
+            if (!container) return;
+
+            if (donations.length === 0) {
+                container.innerHTML = '';
+                if (noResultsMessage) {
+                    noResultsMessage.style.display = 'block';
+                }
+                return;
+            }
+
+            if (noResultsMessage) {
+                noResultsMessage.style.display = 'none';
+            }
+
+            // Group donations by participant and get latest donation for each
+            const donationsByParticipant = {};
+            donations.forEach(donation => {
+                const participantId = donation.participantid;
+                if (!donationsByParticipant[participantId]) {
+                    donationsByParticipant[participantId] = [];
+                }
+                donationsByParticipant[participantId].push(donation);
+            });
+
+            // Get latest donation for each participant
+            const latestDonations = Object.values(donationsByParticipant).map(participantDonations => {
+                // Sort by donationtime (most recent first)
+                return participantDonations.sort((a, b) => {
+                    const timeA = a.donationtime ? new Date(a.donationtime).getTime() : 0;
+                    const timeB = b.donationtime ? new Date(b.donationtime).getTime() : 0;
+                    return timeB - timeA; // Descending order
+                })[0]; // Get the first (latest) donation
+            });
+
+            container.innerHTML = latestDonations.map(donation => {
+                const fullName = `${donation.participantfirstname || ''} ${donation.participantlastname || ''}`.trim();
+                const amount = parseFloat(donation.donationamount || 0).toFixed(2);
+                return `
+                    <div class="participant-card" data-donation-id="${donation.donationid}">
+                        <p class="participant-card-name">${fullName}</p>
+                        <p class="participant-card-subtitle">$${amount}</p>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers to all cards
+            container.querySelectorAll('.participant-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const donationId = this.getAttribute('data-donation-id');
+                    if (donationId) {
+                        loadDonationDetails(donationId);
+                    }
+                });
+            });
+        }
+
+
+        // Load donation details via AJAX
+        function loadDonationDetails(donationId) {
+            const modal = document.getElementById('donationDetailModal');
+            const modalBody = document.getElementById('donationModalBody');
+            const modalFooter = document.getElementById('donationModalFooter');
+            
+            // Show modal with loading state
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Loading donation details...</p></div>';
+            modalFooter.style.display = 'none';
+
+            // Fetch donation details with cache control
+            fetch(`/api/donation/${donationId}`, {
+                method: 'GET',
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch donation details');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    currentDonationData = data;
+                    populateDonationModal(data);
+                    modalFooter.style.display = 'flex';
+                })
+                .catch(error => {
+                    console.error('Error loading donation details:', error);
+                    modalBody.innerHTML = '<div class="participant-empty-state"><p>Error loading donation details. Please try again.</p></div>';
+                });
+        }
+
+        // Populate modal with donation data
+        function populateDonationModal(data) {
+            const modal = document.getElementById('donationDetailModal');
+            const modalTitle = document.getElementById('donationModalTitle');
+            const modalBody = document.getElementById('donationModalBody');
+            const donation = data.donation;
+            const participant = data.participant;
+
+            // Set modal header title
+            const participantName = `${participant.participantfirstname || ''} ${participant.participantlastname || ''}`.trim();
+            modalTitle.textContent = `Donation from ${participantName}`;
+
+            // Build modal content
+            let html = '';
+
+            // Donation Info Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Most Recent Donation</h3>';
+            html += '<div class="participant-info-grid">';
+            html += `<div class="participant-info-item"><span class="participant-info-label">Amount</span><span class="participant-info-value">$${parseFloat(donation.donationamount || 0).toFixed(2)}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Donation Date/Time</span><span class="participant-info-value">${donation.donationtime ? new Date(donation.donationtime).toLocaleString() : 'N/A'}</span></div>`;
+            html += '</div>';
+            html += '</div>';
+
+            // Participant Info Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Participant Information</h3>';
+            html += '<div class="participant-info-grid">';
+            html += `<div class="participant-info-item"><span class="participant-info-label">Name</span><span class="participant-info-value">${participant.participantfirstname || ''} ${participant.participantlastname || ''}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Email</span><span class="participant-info-value">${participant.participantemail || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Date of Birth</span><span class="participant-info-value">${participant.participantdob ? new Date(participant.participantdob).toLocaleDateString() : 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Role</span><span class="participant-info-value">${participant.participantrole || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Phone</span><span class="participant-info-value">${participant.participantphone || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">City</span><span class="participant-info-value">${participant.participantcity || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">State</span><span class="participant-info-value">${participant.participantstate || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">ZIP Code</span><span class="participant-info-value">${participant.participantzip || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">School/Employer</span><span class="participant-info-value">${participant.participantschooloremployer || 'N/A'}</span></div>`;
+            html += `<div class="participant-info-item"><span class="participant-info-label">Field of Interest</span><span class="participant-info-value">${participant.participantfieldofinterest || 'N/A'}</span></div>`;
+            html += '</div>';
+            html += '</div>';
+
+            // Other Donations Section
+            html += '<div class="participant-modal-section">';
+            html += '<h3>Other Donations</h3>';
+            if (data.otherDonations && data.otherDonations.length > 0) {
+                html += '<table class="participant-donations-table">';
+                html += '<tbody>';
+                data.otherDonations.forEach(otherDonation => {
+                    const amount = parseFloat(otherDonation.donationamount || 0);
+                    const date = otherDonation.donationtime ? new Date(otherDonation.donationtime).toLocaleDateString() : 'N/A';
+                    const donationTimeStr = otherDonation.donationtime ? new Date(otherDonation.donationtime).toISOString().slice(0, 16) : '';
+                    const participantName = `${participant.participantfirstname} ${participant.participantlastname}`;
+                    html += `<tr>
+                        <td>${date}</td>
+                        <td>$${amount.toFixed(2)}</td>
+                    </tr>`;
+                });
+                html += '</tbody>';
+                html += '</table>';
+            } else {
+                html += '<div class="participant-empty-state">No other donations found for this participant.</div>';
+            }
+            html += '</div>';
+
+            modalBody.innerHTML = html;
+
+            // Attach event listeners to individual edit/delete buttons in Other Donations section
+            modalBody.querySelectorAll('.other-donation-edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const donationId = this.getAttribute('data-donation-id');
+                    const participantId = this.getAttribute('data-participant-id');
+                    const amount = this.getAttribute('data-amount');
+                    const time = JSON.parse(this.getAttribute('data-time'));
+                    
+                    closeDonationModal();
+                    openModal('donationModal', 'edit', {
+                        donationid: donationId,
+                        participantid: participantId,
+                        donationamount: amount,
+                        donationtime: time
+                    });
+                });
+            });
+            
+            modalBody.querySelectorAll('.other-donation-delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const donationId = this.getAttribute('data-donation-id');
+                    const participantName = JSON.parse(this.getAttribute('data-participant-name'));
+                    
+                    closeDonationModal();
+                    openDeleteModal(`/mDonation/delete/${donationId}`, `donation from ${participantName}`);
+                });
+            });
+
+            // Set up edit and delete button handlers
+            setupModalButtons(donation, participant, data.otherDonations || []);
+        }
+
+        // Setup edit and delete buttons
+        function setupModalButtons(donation, participant, otherDonations) {
+            const editBtn = document.getElementById('donationEditBtn');
+            const deleteBtn = document.getElementById('donationDeleteBtn');
+
+            // Collect all donations for this participant
+            const allDonations = [donation, ...otherDonations];
+
+            // Edit button - allows editing all donations
+            editBtn.onclick = function() {
+                closeDonationModal();
+                editAllDonations(allDonations, participant);
+            };
+
+            // Delete button - deletes all donations for this participant
+            deleteBtn.onclick = function() {
+                closeDonationModal();
+                const participantName = `${participant.participantfirstname} ${participant.participantlastname}`;
+                deleteAllDonations(allDonations, participantName);
+            };
+        }
+
+        // Edit all donations - shows a modal with all donations for individual editing
+        function editAllDonations(donations, participant) {
+            if (donations.length === 0) return;
+            
+            const modal = document.getElementById('editAllDonationsModal');
+            const modalTitle = document.getElementById('editAllDonationsModalTitle');
+            const modalBody = document.getElementById('editAllDonationsModalBody');
+            const participantName = `${participant.participantfirstname || ''} ${participant.participantlastname || ''}`.trim();
+            
+            modalTitle.textContent = `Edit All Donations - ${participantName}`;
+            
+            // Build the donations list
+            let html = '<div class="participant-modal-section">';
+            html += '<h3>All Donations</h3>';
+            html += '<table class="participant-donations-table">';
+            html += '<tbody>';
+            
+            donations.forEach(donation => {
+                const amount = parseFloat(donation.donationamount || 0);
+                const date = donation.donationtime ? new Date(donation.donationtime).toLocaleDateString() : 'N/A';
+                const donationTimeStr = donation.donationtime ? new Date(donation.donationtime).toISOString().slice(0, 16) : '';
+                html += `<tr data-donation-id="${donation.donationid}">
+                    <td>${date}</td>
+                    <td>$${amount.toFixed(2)}</td>
+                    <td style="text-align: center;">
+                        <button class="btn btn-secondary edit-donation-btn" data-donation-id="${donation.donationid}" data-participant-id="${participant.participantid}" data-amount="${donation.donationamount}" data-time="${JSON.stringify(donationTimeStr)}" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-right: 0.5rem;">Edit</button>
+                        <button class="btn btn-primary delete-donation-btn" data-donation-id="${donation.donationid}" data-participant-name="${JSON.stringify(participantName)}" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; background: linear-gradient(135deg, var(--pastel-pink-dark) 0%, #c2185b 100%);">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody>';
+            html += '</table>';
+            html += '</div>';
+            
+            modalBody.innerHTML = html;
+            
+            // Attach event listeners to edit buttons
+            modalBody.querySelectorAll('.edit-donation-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const donationId = this.getAttribute('data-donation-id');
+                    const participantId = this.getAttribute('data-participant-id');
+                    const amount = this.getAttribute('data-amount');
+                    const timeAttr = this.getAttribute('data-time');
+                    let time = '';
+                    
+                    // Safely parse the time attribute
+                    try {
+                        if (timeAttr && timeAttr !== '""' && timeAttr !== 'null') {
+                            time = JSON.parse(timeAttr);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing time:', e);
+                        time = '';
+                    }
+                    
+                    closeEditAllDonationsModal();
+                    openModal('donationModal', 'edit', {
+                        id: donationId, // Use 'id' to match the form field name
+                        donationid: donationId, // Also include donationid for modalHelper compatibility
+                        participantid: participantId,
+                        donationamount: amount,
+                        donationtime: time
+                    });
+                });
+            });
+            
+            // Attach event listeners to delete buttons
+            modalBody.querySelectorAll('.delete-donation-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const donationId = this.getAttribute('data-donation-id');
+                    const participantNameAttr = this.getAttribute('data-participant-name');
+                    let participantName = 'this participant';
+                    
+                    // Safely parse the participant name attribute
+                    try {
+                        if (participantNameAttr && participantNameAttr !== '""' && participantNameAttr !== 'null') {
+                            participantName = JSON.parse(participantNameAttr);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing participant name:', e);
+                    }
+                    
+                    closeEditAllDonationsModal();
+                    openDeleteModal(`/mDonation/delete/${donationId}`, `donation from ${participantName}`);
+                });
+            });
+            
+            // Show the modal
+            modal.classList.add('active');
+        }
+        
+        // Close edit all donations modal
+        function closeEditAllDonationsModal() {
+            const modal = document.getElementById('editAllDonationsModal');
+            modal.classList.remove('active');
+        }
+
+        // Delete all donations for a participant
+        function deleteAllDonations(donations, participantName) {
+            if (donations.length === 0) return;
+            
+            const donationIds = donations.map(d => d.donationid).filter(id => id != null);
+            if (donationIds.length === 0) return;
+            
+            const confirmMessage = `Are you sure you want to delete all ${donationIds.length} donation(s) from ${participantName}? This action cannot be undone.`;
+            
+            if (confirm(confirmMessage)) {
+                // Store donation IDs in sessionStorage to delete after redirect
+                const remainingIds = donationIds.slice(1); // All except first
+                if (remainingIds.length > 0) {
+                    sessionStorage.setItem('remainingDonationsToDelete', JSON.stringify(remainingIds));
+                    sessionStorage.setItem('deleteAllDonationsParticipant', participantName);
+                }
+                
+                // Delete the first donation - this will redirect, and we'll handle the rest on page load
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/mDonation/delete/${donationIds[0]}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+        
+        // Check on page load if we need to continue deleting donations
+        document.addEventListener('DOMContentLoaded', function() {
+            const remainingIds = sessionStorage.getItem('remainingDonationsToDelete');
+            const participantName = sessionStorage.getItem('deleteAllDonationsParticipant');
+            
+            // If we have items in sessionStorage but they're not being used (page loaded fresh, not from redirect)
+            // Clear them to prevent stale data. Only keep them if we're actively using them.
+            if (remainingIds && participantName) {
+                try {
+                    const ids = JSON.parse(remainingIds);
+                    // If IDs exist, we're in the middle of deletion - continue with the process
+                    sessionStorage.removeItem('remainingDonationsToDelete');
+                    sessionStorage.removeItem('deleteAllDonationsParticipant');
+                    
+                    if (ids.length > 0) {
+                        // Continue deleting the remaining donations
+                        setTimeout(() => {
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/mDonation/delete/${ids[0]}`;
+                            document.body.appendChild(form);
+                            
+                            // Store remaining IDs
+                            const nextRemaining = ids.slice(1);
+                            if (nextRemaining.length > 0) {
+                                sessionStorage.setItem('remainingDonationsToDelete', JSON.stringify(nextRemaining));
+                                sessionStorage.setItem('deleteAllDonationsParticipant', participantName);
+                            } else {
+                                // All done
+                                setTimeout(() => {
+                                    alert(`Successfully deleted all donations from ${participantName}.`);
+                                }, 500);
+                            }
+                            
+                            form.submit();
+                        }, 500);
+                    }
+                } catch (e) {
+                    // If parsing fails, clear the stale data
+                    console.warn('Error parsing sessionStorage data, clearing:', e);
+                    sessionStorage.removeItem('remainingDonationsToDelete');
+                    sessionStorage.removeItem('deleteAllDonationsParticipant');
+                }
+            }
+        });
+
+        // Edit other donation (from Other Donations section)
+        function editOtherDonation(donationId, participantId, donationAmount, donationTime) {
+            closeDonationModal();
+            openModal('donationModal', 'edit', {
+                donationid: donationId,
+                participantid: participantId,
+                donationamount: donationAmount,
+                donationtime: donationTime
+            });
+        }
+
+        // Delete other donation (from Other Donations section)
+        function deleteOtherDonation(donationId, participantName) {
+            closeDonationModal();
+            openDeleteModal(`/mDonation/delete/${donationId}`, `donation from ${participantName}`);
+        }
+
+        // Close donation modal
+        function closeDonationModal() {
+            const modal = document.getElementById('donationDetailModal');
+            modal.classList.remove('active');
+            currentDonationData = null;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('donationDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDonationModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDonationModal();
+                closeEditAllDonationsModal();
+            }
+        });
+        
+        // Close edit all donations modal when clicking outside
+        document.getElementById('editAllDonationsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditAllDonationsModal();
+            }
+        });
+    </script>
+</body>
+</html>

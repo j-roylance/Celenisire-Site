@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Surveys Maintenance - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        .section {
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        /* Enhanced search and action bar */
+        .search-action-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(58, 63, 59, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-action-bar:hover {
+            box-shadow: 0 12px 40px rgba(58, 63, 59, 0.12);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 1.5px solid rgba(255, 182, 193, 0.3);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--pastel-pink-dark);
+            box-shadow: 0 0 0 3px rgba(216, 112, 147, 0.15);
+            background: var(--white);
+        }
+
+        .search-box input:hover {
+            border-color: var(--pastel-pink-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            border-radius: 50px;
+            padding: 0.875rem 2rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.35);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pastel-pink-primary) 0%, var(--pastel-pink-dark) 100%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pastel-pink-dark) 0%, var(--pastel-pink-primary) 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--pastel-pink-primary);
+            color: var(--pastel-pink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--pastel-pink-lighter);
+            border-color: var(--pastel-pink-dark);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--dark-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Modern List-Based Design */
+        .modern-list-container {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .modern-list-header {
+            background: var(--light-bg);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .modern-list-header h2 {
+            margin: 0;
+            color: var(--dark-charcoal);
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'DM Serif Display', serif;
+        }
+
+        /* Header Row - Light background to match other pages */
+        .list-header-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr 1.8fr auto;
+            gap: 2rem;
+            padding: 1.25rem 2.5rem;
+            background: var(--light-bg);
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .list-header-cell {
+            padding-right: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .modern-list-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--white);
+        }
+
+        .modern-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .modern-list-item:hover {
+            background: var(--pastel-pink-lighter);
+            transform: translateX(4px);
+            box-shadow: -4px 0 0 var(--pastel-pink-primary);
+        }
+
+        .list-item-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 0.5fr 0.4fr;
+            gap: 2rem;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .list-item-field {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            min-width: 0;
+            padding-right: 0.75rem;
+            text-align: left;
+        }
+
+        .list-item-value {
+            font-size: 1rem;
+            color: var(--dark-charcoal);
+            font-weight: 500;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .list-item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-left: 2rem;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--pastel-pink-lighter);
+            color: var(--pastel-pink-dark);
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1400px) {
+            .list-header-row,
+            .list-item-content {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .list-header-row,
+            .list-item-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-action-bar {
+                padding: 1rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            .list-header-row,
+            .list-item-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .list-item-actions {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <%- include('../partials/navbar')%>
+
+    <!-- Main Content Section -->
+    <section class="section" style="background-color: var(--white) !important; background-image: none !important; padding: 4rem 2rem; min-height: auto; overflow-y: visible;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0;">
+            <!-- Page Header -->
+            <div class="page-header" style="text-align: center; margin-bottom: 3rem; background-color: transparent; padding: 0;">
+                <h1>Surveys Maintenance</h1>
+                <p>Manage survey records and survey information. Manager access only.</p>
+            </div>
+            
+            <!-- Search and Action Bar -->
+            <div class="search-action-bar">
+                <form action="/searchSurvey" method="post" class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" name="search" placeholder="Search surveys..." required>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary btn-small">Search</button>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openModal('surveyModal', 'add')">
+                        Add New Survey
+                    </button>
+                </div>
+            </div>
+         
+            <!-- Display error message if available -->
+            <% if (typeof error_message !== 'undefined' && error_message) { %>
+                <div class="alert alert-error" role="alert">
+                    <%= error_message %>
+                </div>
+            <% } %>
+            
+            <!-- Content Area -->
+            <div style="margin-top: 2.5rem;">
+                <!-- Display surveys list -->
+                <% if (surveys.length === 0) { %>
+                    <div class="modern-list-container">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <p>No surveys found in the database.</p>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="modern-list-container">
+                        <div class="modern-list-header">
+                            <h2>Survey List</h2>
+                        </div>
+                        <div class="list-header-row">
+                            <div class="list-header-cell">Satisfaction score</div>
+                            <div class="list-header-cell">Usefulness score</div>
+                            <div class="list-header-cell">Instructor score</div>
+                            <div class="list-header-cell">Recommendation score</div>
+                            <div class="list-header-cell">Overall score</div>
+                            <div class="list-header-cell">NPS bucket</div>
+                            <div class="list-header-cell">Submission date</div>
+                            <div class="list-header-cell">Actions</div>
+                        </div>
+                        <% for (let i = 0; i < surveys.length; i++) { %>
+                            <div class="modern-list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-field">
+                                        <span class="score-badge"><%= surveys[i].surveysatisfactionscore != null ? surveys[i].surveysatisfactionscore : 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="score-badge"><%= surveys[i].surveyusefulnessscore != null ? surveys[i].surveyusefulnessscore : 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="score-badge"><%= surveys[i].surveyinstructorscore != null ? surveys[i].surveyinstructorscore : 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="score-badge"><%= surveys[i].surveyrecommendationscore != null ? surveys[i].surveyrecommendationscore : 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="score-badge"><%= surveys[i].surveyoverallscore != null ? surveys[i].surveyoverallscore : 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="list-item-value"><%= surveys[i].surveynpsbucket || 'N/A' %></span>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <span class="list-item-value"><%= surveys[i].surveysubmissiondate ? new Date(surveys[i].surveysubmissiondate).toLocaleDateString() : 'No Date' %></span>
+                                    </div>
+                                </div>
+                                <div class="list-item-actions">
+                                    <button class="btn btn-secondary btn-sm" 
+                                            data-comments="<%= (surveys[i].surveycomments || '').replace(/"/g, '&quot;') %>"
+                                            onclick="openCommentsModal('<%= surveys[i].surveyid %>', this.getAttribute('data-comments'))">Comments</button>
+                                    <button class="btn btn-secondary btn-sm" 
+                                            data-surveyid="<%= surveys[i].surveyid %>"
+                                            data-registrationid="<%= surveys[i].registrationid || '' %>"
+                                            data-satisfactionscore="<%= surveys[i].surveysatisfactionscore != null ? surveys[i].surveysatisfactionscore : '' %>"
+                                            data-usefulnessscore="<%= surveys[i].surveyusefulnessscore != null ? surveys[i].surveyusefulnessscore : '' %>"
+                                            data-instructorscore="<%= surveys[i].surveyinstructorscore != null ? surveys[i].surveyinstructorscore : '' %>"
+                                            data-recommendationscore="<%= surveys[i].surveyrecommendationscore != null ? surveys[i].surveyrecommendationscore : '' %>"
+                                            data-overallscore="<%= surveys[i].surveyoverallscore != null ? surveys[i].surveyoverallscore : '' %>"
+                                            data-npsbucket="<%= (surveys[i].surveynpsbucket || '').replace(/"/g, '&quot;') %>"
+                                            data-comments="<%= (surveys[i].surveycomments || '').replace(/"/g, '&quot;').replace(/\n/g, ' ') %>"
+                                            data-submissiondate="<%= surveys[i].surveysubmissiondate ? new Date(surveys[i].surveysubmissiondate).toISOString().slice(0, 16) : '' %>"
+                                            onclick="openModalFromButton(this, 'surveyModal')">Edit</button>
+                                    <button class="btn btn-danger btn-sm" 
+                                            onclick="openDeleteModal('/mSurvey/delete/<%= surveys[i].surveyid %>', 'survey <%= surveys[i].surveyid %>')">Delete</button>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include the add/edit modal -->
+    <%- include('../partials/addEditModal', {
+        modalId: 'surveyModal',
+        modalTitle: 'Add Survey',
+        formId: 'surveyModal-form',
+        formAction: '/mSurvey/save',
+        fields: [
+            { name: 'surveysatisfactionscore', label: 'Survey Satisfaction Score', type: 'number', required: false },
+            { name: 'surveyusefulnessscore', label: 'Survey Usefulness Score', type: 'number', required: false },
+            { name: 'surveyinstructorscore', label: 'Survey Instructor Score', type: 'number', required: false },
+            { name: 'surveyrecommendationscore', label: 'Survey Recommendation Score', type: 'number', required: false },
+            { name: 'surveynpsbucket', label: 'Survey NPS Bucket', type: 'text', required: false },
+            { name: 'surveycomments', label: 'Survey Comments', type: 'textarea', required: false },
+            { name: 'surveysubmissiondate', label: 'Survey Submission Date', type: 'datetime-local', required: false }
+        ]
+    }) %>
+
+    <!-- Include the delete confirmation modal -->
+    <%- include('../partials/deleteConfirmModal') %>
+
+    <!-- Comments Modal -->
+    <div id="commentsModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4);">
+        <div class="modal-content" style="background-color: var(--white); margin: 10% auto; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); width: 80%; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Survey Comments</h2>
+                <button type="button" onclick="closeCommentsModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="commentsContent" style="padding: 1rem; background-color: #f9f9f9; border-radius: 4px; border-left: 4px solid var(--primary-pink);">
+                <!-- Comments will be inserted here -->
+            </div>
+            <div style="margin-top: 1.5rem; text-align: right;">
+                <button type="button" onclick="closeCommentsModal()" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+
+    <script src="/modalHelper.js"></script>
+    <script>
+        function openModalFromButton(button, modalId) {
+            const data = {
+                surveyid: button.getAttribute('data-surveyid') || '',
+                registrationid: button.getAttribute('data-registrationid') || '',
+                surveysatisfactionscore: button.getAttribute('data-satisfactionscore') || '',
+                surveyusefulnessscore: button.getAttribute('data-usefulnessscore') || '',
+                surveyinstructorscore: button.getAttribute('data-instructorscore') || '',
+                surveyrecommendationscore: button.getAttribute('data-recommendationscore') || '',
+                surveyoverallscore: button.getAttribute('data-overallscore') || '',
+                surveynpsbucket: button.getAttribute('data-npsbucket') || '',
+                surveycomments: button.getAttribute('data-comments') || '',
+                surveysubmissiondate: button.getAttribute('data-submissiondate') || ''
+            };
+            openModal(modalId, 'edit', data);
+            
+            // Set up overall score calculation after modal opens
+            setTimeout(() => {
+                setupOverallScoreCalculation(modalId);
+            }, 100);
+        }
+
+        // Calculate overall score based on the four scores
+        function calculateOverallScore(modalId) {
+            const satisfaction = parseFloat(document.getElementById(modalId + '-surveysatisfactionscore')?.value) || null;
+            const usefulness = parseFloat(document.getElementById(modalId + '-surveyusefulnessscore')?.value) || null;
+            const instructor = parseFloat(document.getElementById(modalId + '-surveyinstructorscore')?.value) || null;
+            const recommendation = parseFloat(document.getElementById(modalId + '-surveyrecommendationscore')?.value) || null;
+            
+            const scores = [satisfaction, usefulness, instructor, recommendation].filter(s => s !== null && !isNaN(s));
+            
+            if (scores.length > 0) {
+                const sum = scores.reduce((a, b) => a + b, 0);
+                return Math.round(sum / scores.length); // Round to nearest integer (database column is integer type)
+            }
+            return null;
+        }
+
+        // Set up event listeners for automatic overall score calculation
+        function setupOverallScoreCalculation(modalId) {
+            const scoreFields = [
+                modalId + '-surveysatisfactionscore',
+                modalId + '-surveyusefulnessscore',
+                modalId + '-surveyinstructorscore',
+                modalId + '-surveyrecommendationscore'
+            ];
+            
+            scoreFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    // Remove existing listeners to avoid duplicates
+                    const newField = field.cloneNode(true);
+                    field.parentNode.replaceChild(newField, field);
+                    
+                    // Add new listener
+                    newField.addEventListener('input', () => {
+                        const overallScore = calculateOverallScore(modalId);
+                        // Display calculated score (you could add a read-only display field here if desired)
+                        console.log('Calculated overall score:', overallScore);
+                    });
+                }
+            });
+        }
+
+        // Set up calculation when modal opens in add mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const surveyModal = document.getElementById('surveyModal');
+            if (surveyModal) {
+                // Set up calculation for add mode
+                setupOverallScoreCalculation('surveyModal');
+                
+                // Also set up when modal is opened in add mode
+                const originalOpenModal = window.openModal;
+                window.openModal = function(modalId, mode, data) {
+                    originalOpenModal(modalId, mode, data);
+                    if (modalId === 'surveyModal') {
+                        setTimeout(() => {
+                            setupOverallScoreCalculation(modalId);
+                        }, 100);
+                    }
+                };
+            }
+        });
+
+        // Comments Modal Functions
+        function openCommentsModal(surveyId, comments) {
+            const modal = document.getElementById('commentsModal');
+            const commentsContent = document.getElementById('commentsContent');
+            
+            if (comments && comments.trim()) {
+                commentsContent.innerHTML = '<p>' + escapeHtml(comments).replace(/\n/g, '<br>') + '</p>';
+            } else {
+                commentsContent.innerHTML = '<p><em>No comments provided.</em></p>';
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeCommentsModal() {
+            const modal = document.getElementById('commentsModal');
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('commentsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login - Ella Rises</title>
+    <link rel="icon" type="image/png" href="/Ella Rises Logo (3).png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color: var(--light-bg);">
+    <!--Navigation-->
+    <%- include('./partials/navbar') %>
+
+    <!-- Login Section -->
+  <div class="login-card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <img src="/Ella Rises Logo (3).png" alt="Ella Rises" style="width: 120px; height: 120px; margin-bottom: 1rem;">
+      <h2 style="font-family: 'DM Serif Display', serif; color: var(--dark-charcoal); margin-bottom: 0.5rem;">Welcome Back</h2>
+      <p style="color: var(--text-light);">Sign in to access your account</p>
+    </div>
+    <!-- This is EJS. It receives data from the server as JSON like a dictionary -->
+    <!-- The error_message was passed by the server. The % symbol allows you to check the data -->
+    <% if (error_message && error_message !== "") { %>
+      <!-- The %= symbols allow you to extract the data and substitute in your html file -->
+      <div class="alert alert-error" id="error_message" name="error_message" style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8d7da; color: #721c24; border-radius: 5px; text-align: center;">
+        <%= error_message %>
+      </div>
+    <% } %>    
+    <!-- The action specifies the route to find in index.js and the method is either GET or POST -->
+    <!-- This relates to either app.get or app.post -->
+    <form action="/login"  method="POST"> <!--goes to app.post("/login") and sends the jawn in here to there-->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
+  </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/visitorDonation">Donate</a>
+                <a href="/login">Login</a>
+            </div>
+            <p>&copy; 2025 Ella Rises. All rights reserved. | Empowering lives, building futures.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

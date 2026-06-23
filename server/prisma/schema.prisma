@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  ACCOUNTANT
+  VIEWER
+}
+
+enum DonationStatus {
+  pledged
+  contacted
+  received
+  cancelled
+}
+
+enum MessageStatus {
+  new
+  read
+  archived
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+enum TransactionCategory {
+  Research
+  Prototyping
+  LegalFormation
+  Operations
+  Software
+  Marketing
+  Donations
+  Other
+}
+
+enum ProjectStatus {
+  concept
+  researching
+  prototyping
+  active
+  paused
+}
+
+enum InterestArea {
+  donor
+  volunteer
+  researcher
+  engineer
+  general
+  media
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(VIEWER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  updatePosts             UpdatePost[]
+  accountingTransactions  AccountingTransaction[]
+  activityLogs            ActivityLog[]
+}
+
+model DonationPledge {
+  id                 String         @id @default(cuid())
+  name               String
+  email              String
+  amount             Decimal        @db.Decimal(10, 2)
+  message            String?
+  acknowledgedStatus Boolean        @default(false)
+  status             DonationStatus @default(pledged)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model Subscriber {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  interestArea InterestArea
+  message      String?
+  consent      Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  topic     String
+  message   String
+  status    MessageStatus @default(new)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model AccountingTransaction {
+  id             String              @id @default(cuid())
+  type           TransactionType
+  date           DateTime
+  amount         Decimal             @db.Decimal(10, 2)
+  category       TransactionCategory
+  description    String
+  vendorOrSource String?
+  notes          String?
+  createdById    String
+  createdBy      User                @relation(fields: [createdById], references: [id])
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  status      ProjectStatus
+  impactArea  String
+  description String
+  isPublic    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model UpdatePost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  body        String
+  published   Boolean   @default(false)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+}

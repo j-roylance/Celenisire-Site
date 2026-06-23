@@ -1,0 +1,72 @@
+<!-- Reusable Modal for Add/Edit Operations -->
+<div id="<%= modalId %>" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('<%= modalId %>')">&times;</span>
+        <h2 id="<%= modalId %>-title"><%= modalTitle %></h2>
+        
+        <form id="<%= formId %>" method="POST" action="<%= formAction %>">
+            <input type="hidden" id="<%= modalId %>-id" name="id" value="">
+            <input type="hidden" id="<%= modalId %>-mode" name="mode" value="">
+            
+            <!-- Dynamic form fields -->
+            <% fields.forEach(field => { %>
+                <div class="form-group">
+                    <label for="<%= modalId %>-<%= field.name %>"><%= field.label %></label>
+                    
+                    <% if (field.type === 'textarea') { %>
+                        <textarea 
+                            id="<%= modalId %>-<%= field.name %>" 
+                            name="<%= field.name %>"
+                            <%= field.required ? 'required' : '' %>
+                            <%= field.readonly ? 'readonly' : '' %>
+                        ></textarea>
+                    <% } else if (field.type === 'select') { %>
+                        <select 
+                            id="<%= modalId %>-<%= field.name %>" 
+                            name="<%= field.name %>"
+                            <%= field.required ? 'required' : '' %>
+                            <%= field.readonly ? 'disabled' : '' %>
+                        >
+                            <option value="">Select <%= field.label %></option>
+                            <% field.options.forEach(option => { %>
+                                <option value="<%= option.value %>"><%= option.text %></option>
+                            <% }); %>
+                        </select>
+                    <% } else if (field.type === 'radio') { %>
+                        <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+                            <% field.options.forEach(option => { %>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: normal;">
+                                    <input 
+                                        type="radio" 
+                                        id="<%= modalId %>-<%= field.name %>-<%= option.value %>" 
+                                        name="<%= field.name %>" 
+                                        value="<%= option.value %>"
+                                        <%= (field.default === option.value) ? 'checked' : '' %>
+                                        <%= field.required ? 'required' : '' %>
+                                        <%= field.readonly ? 'disabled' : '' %>
+                                        style="width: auto; cursor: pointer;"
+                                    >
+                                    <span><%= option.text %></span>
+                                </label>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <input 
+                            type="<%= field.type || 'text' %>" 
+                            id="<%= modalId %>-<%= field.name %>" 
+                            name="<%= field.name %>"
+                            <%= field.required ? 'required' : '' %>
+                            <%= field.readonly ? 'readonly' : '' %>
+                        >
+                    <% } %>
+                </div>
+            <% }); %>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('<%= modalId %>')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
