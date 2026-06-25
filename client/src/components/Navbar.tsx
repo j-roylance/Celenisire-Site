@@ -23,7 +23,7 @@ export function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <img src="/logo.svg" alt="" className="navbar-logo" aria-hidden="true" />
+          <img src="/logo.png" alt="" className="navbar-logo site-logo" aria-hidden="true" />
           <span className="navbar-brand-text">Celenisire</span>
         </Link>
 

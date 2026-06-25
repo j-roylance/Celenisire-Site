@@ -443,6 +443,10 @@ img {
   object-fit: contain;
 }
 
+.site-logo {
+  object-fit: contain;
+}
+
 .navbar-brand-text {
   color: var(--dark-charcoal);
 }

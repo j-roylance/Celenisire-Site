@@ -23,7 +23,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="admin-layout">
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <img src="/logo.svg" alt="" aria-hidden="true" />
+          <img src="/logo.png" alt="" className="site-logo" aria-hidden="true" />
           <span>Admin</span>
         </div>
         <ul className="admin-nav">

@@ -8,7 +8,7 @@ interface HeroProps {
 export function Hero({ eyebrow, title, subtitle, actions }: HeroProps) {
   return (
     <section className="hero landing-section visible">
-      <img src="/logo.svg" alt="" className="hero-watermark" aria-hidden="true" />
+      <img src="/logo.png" alt="" className="hero-watermark site-logo" aria-hidden="true" />
       <div className="container">
         <div className="hero-content">
           {eyebrow && <p className="hero-eyebrow">{eyebrow}</p>}

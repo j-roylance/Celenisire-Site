@@ -27,7 +27,7 @@ export function LoginPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <img src="/logo.svg" alt="Celenisire" style={{ height: 56, margin: '0 auto' }} />
+          <img src="/logo.png" alt="Celenisire" className="site-logo" style={{ height: 56, margin: '0 auto' }} />
         </div>
         <h1>Admin Login</h1>
         <p>Sign in to access the Celenisire admin dashboard.</p>

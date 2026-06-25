@@ -27,7 +27,7 @@ export function Footer() {
         <div className="footer-grid">
           <div>
             <div className="footer-brand">
-              <img src="/logo.svg" alt="" aria-hidden="true" />
+              <img src="/logo.png" alt="" className="site-logo" aria-hidden="true" />
               <span>Celenisire</span>
             </div>
             <p style={{ color: 'rgba(255,255,255,0.75)' }}>

@@ -28,7 +28,7 @@ export function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          <img src="/logo.svg" alt="Celenisire" style={{ height: 48, margin: '0 auto' }} />
+          <img src="/logo.png" alt="Celenisire" className="site-logo" style={{ height: 48, margin: '0 auto' }} />
         </div>
         <div className="dev-warning">
           TODO: Restrict admin registration before production. Registration is currently open for development.
